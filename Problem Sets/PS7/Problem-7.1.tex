@@ -1,0 +1,60 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 7}
+\date{04/17/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 7-1: Reductions}
+
+Assuming that a variable $x_i$ occurs in $k$ clauses, then for each occurence of $x_i$, we can substitute with a variable $x_{i,j}$ where $1 \leq j \leq k$ and adding the following clause to the formula: $(x_{i,1} \vee x_{i,2}') \wedge (x_{i,2} \vee x_{i,3}') \ldots \wedge (x_{i,k} \vee x_{i,1}')$. Note that $x_i \Rightarrow x_{i,1} \Rightarrow x_{i,2} \Rightarrow \ldots x_{i,k}.$ Thus when $x_i$ is true, the value of this additional clause is true. When $x_i$ is false, the value of this clause is still true. Thus, the value of the original formula is not impacted.
+
+The Reduction Algorithm is as follows:
+
+\subsection*{Algorithm}
+
+\begin{algorithm}
+\caption{3SAT to SAT(10)}\label{Polynomial time reduction from 3SAT to SAT(10)}
+\begin{algorithmic}[1]
+\Procedure{3SAT to SAT(10)}{$\varphi$} \Comment{ $\varphi$ is the boolean formula in which each variable appears in at most 10 clauses}
+	\For{each variable $x_i$ in $\varphi$}
+		\If{the count is $\leq 10$}
+			\State do nothing
+		\Else 
+			\For{each instance of variable $x_i > 10$}
+				\State Let $n$ be number of instances of $x_i$
+				\State $k \gets n-10$
+				\State We replace each instance of $x_i$ after $10$ by $x_{i,j}$ where $1 \leq j \leq k$
+				\State Add the clause $(x_{i,1} \vee x_{i,2}') \wedge (x_{i,2} \vee x_{i,3}') \ldots \wedge (x_{i,k} \vee x_{i,1}')$
+				\State this reduces to true
+			\EndFor
+		\EndIf
+	\EndFor
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}

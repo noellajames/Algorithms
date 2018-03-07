@@ -1,0 +1,104 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 3}
+\date{02/11/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section{Problem 3-3: Median Finding}
+
+\textbf{Input:} $l_1, s_1, e_1, l_2, s_2, e_2$ where $l_1$ is the first sorted array input. $s_1$ and $e_1$ are the start and end indices of $l_1$. $l_2$ is the second sorted array input. $s_2$ and $e_2$ are the start and end indices of $l_2$.\\
+\textbf{Output:} The median of $l_1$ and $l_2$.\\
+\begin{algorithm}
+\caption{MEDIAN FINDING}\label{Find the median of two sorted arrays}
+\begin{algorithmic}[1]
+\Procedure{MEDIAN-FINDING}{$l_1, s_1, e_1, l_2, s_2, e_2$}
+	\If{$e_1 - s_1 = 1$ AND $e_2 - s_2 = 1$} \Comment{Both arrays are single element arrays, or has reached recursively to this level.}
+		\State $med \gets \frac {{l_1}[s_1] + {l_2}[s_2]}{2}$
+		\State return $med$
+	\EndIf
+	\State $left_{med} \gets$ MEDIAN($l_1, s_1, e_1$)
+	\State $right_{med} \gets$ MEDIAN($l_2, s_2, e_2$)
+	\If{$left_{med} = right_{med}$}
+		\State return $left_{med}$
+	\ElsIf{$left_{med} < right_{med}$}
+		\State $s_1 \gets \lfloor\frac {s_1} {2}\rfloor + 1$
+		\State $e_2 \gets \lceil\frac {e_2}{2}\rceil$
+		\State return MEDIAN-FINDING($l_1, s_1, e_1, l_2, s_2, e_2$)
+	\Else \Comment{$left_{med} > right_{med}$}
+		\State $e_1 \gets \lceil\frac {e_1}{2}\rceil$
+		\State $s_2 \gets \lfloor\frac {s_2} {2}\rfloor + 1$
+		\State return MEDIAN-FINDING($l_1, s_1, e_1, l_2, s_2, e_2$)
+	\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{MEDIAN}\label{Find the median of a sorted array}
+\begin{algorithmic}[1]
+\Procedure{MEDIAN}{$l, s, e$} \Comment{$l$ is the array, $s$ is the starting index, $e$ is the end index}
+	\State $length \gets {e - s}$
+	\If{$length \% 2 = 0$} 
+		\State $median \gets l[\frac {length}{2}]$
+		\State return $median$
+	\Else
+		\State $value_l \gets l[\frac {length}{2}]$
+		\State $value_r \gets l[(\frac {length}{2}) + 1]$
+		\State $median \gets \frac{value_l + value_r}{2}$
+		\State return $median$
+	\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lem}
+The MEDIAN-FINDING algorithm will always find the correct median of $2$ sorted arrays.
+\end{lem}
+\begin{proof}
+\textbf{Base Case:} $n$ and $m$ are both $1$. The algorithm returns the median of the two values in the individual arrays.\\
+\textbf{Induction Hypothesis:} The algorithm will return the median of all values of $n$ and $m$ given that $n \leq j$ and $m \leq k$ for arrays $l_1$ and $l_2$ respectively.\\
+\textbf{Induction:} We prove that the algorithm works for values $j+1$ and $k+1$ for arrays $l_1$ and $l_2$ respectively.
+When arrays $l_1$ and $l_2$ are passed into the algorithm, they are immediately checked to see if they are single element arrays. If they are, we immediately return their median. However, if they're not, we calculate the medians of arrays $l_1$ and $l_2$ respectively. If the respective medians are equal, we return the median. However, if they're not, we recursively call the algorithm and shorten each array by half. Thus by the induction hypothesis where the algorithm will return the median of all values of $n$ and $m$ given that $n \leq j$ and $m \leq k$, this proves that the algorithm is correct since for $j+1$ and $k+1$ divided by 2 are less than $j$ and $k$ respectively.
+\end{proof}
+
+\subsection{Recurrence Relationship}
+$T(n,m) = T(\frac {n}{2}, \frac {m}{2}) + \theta(1)$\\
+$T(1,1) = \theta(1)$\\
+
+\begin{note}
+We assume that $n > m$ for solving the recurrence relationship.
+\end{note}
+
+$T(n,m) = T(\frac {n}{2}, \frac {m}{2}) + c$\\
+$T(1,1) = c$\\
+
+$T(n,m) = T(\frac {n}{2}, \frac {m}{2}) + c = (T(\frac {n}{4}, \frac {m}{4}) + c) + c = ((T(\frac {n}{8}, \frac {m}{8}) + c) + c) + c$ 
+$= ((T(1,1) + c) + \ldots + c) + c = c \log n = \theta(\log n)$\\
+
+If $n < m$, the recurrence relationship will be $\theta(\log m)$.
+
+The final recurrence relationship is $\theta(\log (max(n, m)))$.
+\end{document}

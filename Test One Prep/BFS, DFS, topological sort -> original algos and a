@@ -1,0 +1,18 @@
+BFS, DFS, topological sort -> original algos and algos for cycles 
+Interval Scheduling - proof 4.2
+	(4.2) For all indices r ≤ k we have f(ir) ≤ f(jr).
+	(4.3) The greedy algorithm returns an optimal set A
+Dijkstra, priority queue
+MST-Prim, Kruskal, union find - cycle lemma, cut lemma full proofs
+recurrences -> master theorem 
+	unrolling of recurrences
+	geometric sequence
+merge sort - inversion problem w identifying sections that don't belong to merge sort
+karatsuba, strassen - formulas recurrence
+closest pair of points - know it!
+Strong connectivity - how to find it and proof (G and Grev)
+
+
+Textbook: 4.10, 4.8
+Graph: graph from hw3
+

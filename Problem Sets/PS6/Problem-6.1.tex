@@ -1,0 +1,49 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 6}
+\date{04/9/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 6-1: Job Assignment revisited}
+
+\subsection*{Solution}
+
+Let $h_1, h_2, \ldots, h_n$ be the hours worked by each worker $1 \ldots n$. The goal is to find an allocation such that $min(\sum_{k=1}^{n} h_k)$. \\
+
+Assume there are $p$ tasks, $t_1 \ldots t_p$. The equation for task $t_1$ would be $(h_1 \times M[1,1] + h_2 \times M[2,1] + \ldots + h_n \times M[n,1]) \geq 1$.\\
+The equation for task $t_k$  would be $(h_1 \times M[1,k] + h_2 \times M[2,k] + \ldots + h_n \times M[n,k]) \geq 1$ for $k = 1 \ldots p$. \\
+Each worker can work a maximum of 10 hours. Thus we have a set of equations $h_i \leq 10$ for $i = 1 \ldots n$.\\
+Each worker can work a minimum of 0 or more hours. Thus we have a set of equations $h_i \geq 0$ for $i = 1 \ldots n$.\\\\
+Thus the linear programming solution for the above problem is : \\
+$min(\sum_{k=1}^{n} h_k)$.\\
+such that : \\
+$(h_1 \times M[1,k] + h_2 \times M[2,k] + \ldots + h_n \times M[n,k]) \geq 1$ for $k = 1 \ldots p$ \\
+and \\
+$h_i \leq 10$ for $i = 1 \ldots n$. \\
+and \\
+ $h_i \geq 0$ for $i = 1 \ldots n$.
+
+\end{document}

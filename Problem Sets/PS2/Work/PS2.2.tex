@@ -1,0 +1,68 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+Noella James\\
+Collaborators: none\\
+
+\section{Problem 2-2: OCD}
+
+\begin{lem}
+Given the previous algorithm, the result will always be the smallest number of containers you can fill $L$ gallons of oil in.
+\end{lem}
+
+\begin{proof}
+By Induction: A natural number $L$, where $L \ge 1$.\\
+\textbf{Base Case:}  $L = 1$\\
+Given the algorithm, a 1 gallon container will be used. The base case olds true that the smallest number of containers you can fill $L$ gallons of oil in since only one container is used.\\
+\textbf{Induction Hypotheses:} 
+Given $k$ gallons of oil, there exists a method to store the $k$ gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full.\\
+\textbf{Induction Step:} 
+For $k+1$ gallons of oil, we want to show that there also exists a method to store the $k+1$ gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full. \\
+It is possible to find such an $i$ where $i$ is between $0$ to $1000$ where $2^i  \le k+1$.\\
+$Z = k+1 - 2^i$\\
+$Z$ is greater than or equal to $0$ and it is less than or equal to $k$.\\
+By Induction Hypotheses , there exists a method to store the $Z$ gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full. Thus, we conclude the lemma is true.
+\end{proof}
+
+\begin{lem}
+Given the previous algorithm, this algorithm finds the optimal solution.
+\end{lem}
+
+\begin{proof}
+Assume there is an optimal solution $\theta$. \\
+By Induction: A natural number $L$, where $L \le 1$, the solution returned by the previous algorithm is the same as $\theta$.\\
+\textbf{Base Case:}  $L = 1$\\
+The previous algorithm will therefore return $1$ container of size $1$-gallon.\\
+$\theta$ will also return $1$ container of size $1$-gallon since that is the optimal solution.\\
+\textbf{Induction Hypotheses:} 
+Given $k$ gallons of oil, the previous algorithm and $\theta$ will return the same count and sizes of containers to store the $k$ gallons of oil.\\
+\textbf{Induction Step:} 
+For $k+1$ gallons of oil, we want to show that the previous algorithm and $\theta$ will return the same count and sizes of containers to store the $k+1$ gallons of oil.\\
+It is possible to find such an $i$ where $i$ is between $0$ to $1000$ where $2^i  \le k+1$.\\
+$Z = k+1 - 2^i$\\
+$Z$ is greater than or equal to $0$ and it is less than or equal to $k$.\\
+Both $\theta$ and the previous algorithm will choose the $2^i$ container because that is the maximum container that can be chosen given the rule that holds the most oil and contains no empty space.
+Since $Z \ge 0$ and $Z \le k$, both $\theta$ and the previous algorithm will choose the same sequence of containers by the Induction Hypotheses.
+Thus, we conclude that the lemma is true.
+\end{proof}
+
+\end{document}

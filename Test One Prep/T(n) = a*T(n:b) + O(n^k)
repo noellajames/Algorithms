@@ -1,0 +1,12 @@
+T(n) = a*T(n/b) + O(n^k)
+a=8
+b=2
+k=2
+
+T(n) = a*T(n/b) + O(m^k)
+where m = n log n
+a = 2
+b = 2
+k = 1
+m log n
+n log n log n

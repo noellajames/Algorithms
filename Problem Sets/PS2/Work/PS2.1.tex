@@ -1,0 +1,105 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+Noella James\\
+Collaborators: none\\
+
+\section{Problem 2-1: Pedantic Sandy}
+
+\subsection{(Problem Description)}
+The problem that we are trying to solve is a variation of Dijkstra's algorithm. We need to write an algorithm that finds the shortest path to all the vertices such that each of the paths will end on Sally's left foot.\\
+
+\subsection{(Algorithm to Construct $G'$)}
+
+\textbf{\textit{Input :}}
+Graph $G=(V,E, w:E \rightarrow \mathbb{R}^{\ge 0})$ weighted w/non-negative weights.
+
+\textbf{\textit{Output :}}
+Graph $G'$ such that the vertices in the graph $G'$ contains each vertex from $G$ and the foot used to step on the vertex. \\ 
+Graph $G'=(V',E', w':E' \rightarrow \mathbb{R}^{\ge 0})$ where $V' =  V \times \{left\} \bigcup V \times \{right\}$, edge set $E' = \{((u, left), (v, right))|(u,v) \in E \}  \bigcup \{((u, right), (v, left))|(u, v) \in E \} $\\ and weight function $w'((u, \cdot),(v,\cdot)) = w((u,v)).$
+
+\begin{algorithm}
+\caption{Construct $G'$}\label{Construction of $G'$}
+\begin{algorithmic}[1]
+\Procedure{Construct $G'$}{$G$}\Comment{$G(V,E)$ weighted graph w/non-negative weights}
+	\ForAll{vertices $ v \in V$} 
+		\State $V' \gets (v, left)$ 
+		\State $V' \gets (v, right)$ 
+	\EndFor \Comment{$n = |V| \,$ Complexity = $O(n)$}
+	\ForAll{edges $e = (u, v) \in E$}
+		\State $E' \gets ((u, left), (v, right)) $ 
+		\State $E' \gets ((u, right), (v, left)) $ 
+	\EndFor  \Comment{$m = |E| \,$ Complexity = $O(m)$}
+	\ForAll{weights $p = (u, v) \in w$}
+		\State $w' \gets ((u, left), (v, right)) $ 
+		\State $w' \gets ((u, right), (v, left)) $ 
+	\EndFor  \Comment{$m = |E| \,$ Complexity = $O(m)$}
+	\State \textbf{return} $G'=(V',E', w':E' \rightarrow \mathbb{R}^{\ge 0})$.
+\EndProcedure \Comment{Total Complexity = $O(n + 2m)$}
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Find shortest paths to left vertices}
+
+\textbf{\textit{Input :}}
+Graph $G=(V,E, w:E \rightarrow \mathbb{R}^{\ge 0})$ weighted w/non-negative weights.
+
+\textbf{\textit{Output :}}
+A set $S$ that contains all the shortest paths to each vertex where the foot used to step on the last vertex is the left foot.
+
+\begin{algorithm}
+\caption{Find shortest left foot path}\label{Find the shortest left foot path}
+\begin{algorithmic}[1]
+\Procedure{Find shortest left foot path}{$G, s$}\Comment{$G(V,E)$ weighted graph w/non-negative weights, and $s$ is a vertex in $G$}
+	\State $G' \gets $ Construct $G'(G)$ \Comment{$n = |V|, m = |E|\,$ Complexity = $O(n + 2m)$}
+	\State $S' \gets $ Dijkstra's $(G', (s, left))$ \Comment{$n = |V|, m = |E|\,$ Complexity = $O((n + 2m)\log n)$}
+	\State $S \gets \{\}$
+	\ForAll{$(v, left) \in S'$}
+		\State $S \gets S \bigcup \{v\}$
+	\EndFor  \Comment{$n = |V| \,$ Complexity = $O(n)$}
+	\State \textbf{return} $S$. \Comment{If a given vertex $u$ is not in $S$, then no path exists}
+\EndProcedure \Comment{$n = |V| \,$ Complexity = $O((n + 2m)(\log n + 1))$}
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Complexity}
+
+The construction of $G'$ has a complexity of $O(n+2m)$. Dijkstra's Algorithm has a complexity of $O((n + 2m)\log n)$. The complexity of going through all the vertices in $S'$ that use the left foot and end with the left  foot is $O(n)$. Therefore, the total complexity is $O((n + 2m)(\log n + 1))$. 
+
+\subsection{Correctness Proof}
+\begin{note}
+The correctness proof depends on the correctness of Dijkstra's Algorithm.
+\end{note}
+\begin{lem}
+The algorithm above always provides the shortest path, if one exists, such that the last vertex will be the left foot.
+\end{lem}
+
+\begin{proof} By Induction\\
+\textbf{Base Case:} $G = \{ s \},$ no additional path to be written since Sally can't go anywhere.\\
+\textbf{Induction Hypotheses:} Lemma is $true$ for certain $s$.\\
+\textbf{Induction Step:} We'll prove that the lemma is still $true$ after we add a new vertex $v$ to $G$.\\
+For this vertex $v$, we will be adding $(v, left)$ and $v, right)$ to $V'$. We also will be adding every edge $e$ from and to $v$ to $E'$. Similarly, we will be adding every weight $p$ to $w'$. 
+Thus, it should be possible to run Dijkstra's Algorithm on Graph $G'$ and compute the shortest paths to $(v, left)$ and thus to $v$.
+\end{proof}
+
+
+\end{document}

@@ -1,0 +1,71 @@
+1. The max distance = d
+2. The distance between two stopping points is <= d
+	(x_j - x_i) <= d
+	x_j = end stopping point
+	x_i = start point
+
+	R = all the points (x_1, x_2, ... x_n)
+	A = all the stopping points chosen
+
+Algorithm
+
+Initially let R be the sorted set of stopping points, and let A be empty. The last point of R is the last point is the end of the trip
+
+
+Previous stopping point p = 0;
+While R is not yet empty
+	d <- 0
+	Stopping point s = 0;
+	While daily distance d is less than or equal to max distance d_max
+		Choose the first value i E R and make d = i - p;
+		if d > d_max
+			add s to A
+			p = s;
+			break;
+		else 
+			s = i; 
+			remove i from R
+
+	EndWhile
+EndWhile
+Return the set A as the set of stopping points chosens.
+R = {5, 10, 17, 25, 35, 42, 43, 44}
+
+
+R = {}
+max_d = 10
+i = 44
+d = 9
+s = 44
+p = 35
+A = {10, 17, 25, 35}
+
+Claim: |A| <= |O|
+
+Claim: The distance traveled at the end of any day by A is greater than or equal to the distance traveled by O.
+Proof by Induction:
+
+Denote xA_i = the stopping point at the end of day i by the greedy algorithm.
+Denote xO_i = the stopping point at the end of day i by the optimal algorithm.
+Denote D(x) = the distance from the starting point to a given stop x.
+
+Base Case:
+The number of days r = 1. 
+
+At the end of day 1, the algorithm picks up the stopping point xA_1 that has the maximum distance from the stopping point but is less than or equal to d_max. The base case holds true.
+
+D(xA_1) >= D(xO_1) 
+
+Induction Hypothesis:
+
+Now let r > 1. We will assume as our induction hypothesis that the statement is true for r-1, and we will try to prove it for r. Induction hypothesis lets us assume that D(xA_(r-1)) >= D(xO_(r-1)).
+
+Induction Proof:
+
+proof by contradiction:
+	Lets assume D(xA_(r)) < D(xO_(r)) is true.
+	This suggests that my algorithm stops earlier than the optimal solution.
+	D(xA_(r)) - D(xA_(r-1)) < D(xO_(r)) - D(xA_(r-1)) <= max_dist
+	This implies that the optimal algorithm stops at a distance further away away from where the greedy algorithm stops. The distance where the optimal algorithm stops is less than the max distance. However, this is a contradiction since the greedy algorithm will consider the addition distance until max_dist.
+
+

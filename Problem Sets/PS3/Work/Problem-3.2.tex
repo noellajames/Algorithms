@@ -1,0 +1,184 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 3}
+\date{02/11/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section{Problem 3-2: Shortest Paths and Spanning Trees.}
+
+\subsection{Part a}
+Prove or disprove. Given an undirected, connected, weighted graph, if you run an MST algorithm on the graph, then the weight of the shortest path between any two vertices is the weight of the unique path between them in the tree.\\
+
+\begin{proof}
+This statement is false. We will disprove it using a counterexample. Consider the following graph:\\
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n2) [above=of n1] {1};
+  \node (n3) [right=of n1]  {2};
+  \node (n4) [below=of n1]  {3};
+  \node (n5) [below=of n3]  {4};
+  \node (n6) [right=of n3]  {5};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw  [very thick, green]  (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, green]  (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw  [very thick, green] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw   (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   (n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   [very thick,  green]  (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw [very thick, green] (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+The green edges are the edges chosen by the MST. The weight of the shortest path in the graph between vertices 0 and 1 is 5. However, in the MST, the edge (0,1) is not present. Therefore, the shortest path between 0 and 1 is through vertex 2. Therefore, the total weight is 7. Therefore, this disproves the claim.
+\end{proof}
+
+ \subsection{Part b}
+Prove or disprove. Let $G = (V,E)$ be an undirected, connected, weighted graph. Suppose we run Dijkstra's algorithm on G starting a vertex $u \in V$ . For every vertex $v \in V$ let $p_v$ denote the edges of the shortest path from $u$ to $v$ that is found by Dijkstra. Let $E' = \bigcup_{v \in V p_v}$.
+
+\subsubsection{$(V, E')$ is a spanning tree of $G$}
+\begin{proof}
+In a Spanning Tree, it is guaranteed that for a vertex $s$, there will always be a path to a different vertex $t$.
+Running Dijkstra's algorithm at the start node $u$ on the undirected Graph $G$, it is guaranteed that for every vertex $v \in V$, there is a path from vertex $u$ to $v$. Since it is an undirected graph, there is also a path for every $v \in V$ to $u$, and it is a path from u to v in the reverse direction.\\
+Therefore, if $s$ and $t$ do not share an edge $(s,t)$, there is still a path from vertex $s$ to vertex $t$ through the start node $u$.
+\end{proof}
+
+\subsubsection{$(V, E')$ is a minimum spanning tree of $G$}
+\begin{proof}
+We disprove this claim using a proof by counterexample.\\
+%My original graph%
+Original Graph:\\
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n2) [above=of n1] {1};
+  \node (n3) [right=of n1]  {2};
+  \node (n4) [below=of n1]  {3};
+  \node (n5) [below=of n3]  {4};
+  \node (n6) [right=of n3]  {5};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw  (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw  (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw   (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   (n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+%This is my Dijkstra%
+Dijkstra of Graph wiith start node $0$:\\
+The edges in red are the shortest paths to all vertices from vertex $0$.\\
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n2) [above=of n1] {1};
+  \node (n3) [right=of n1]  {2};
+  \node (n4) [below=of n1]  {3};
+  \node (n5) [below=of n3]  {4};
+  \node (n6) [right=of n3]  {5};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  [very thick, red] (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw   [very thick, red] (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, red]  (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw   (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw   (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   [very thick,  red](n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   [very thick,  red]  (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw  (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+
+
+%This is my MST%
+MST of Graph:\\
+The edges in green are the edges in the MST.\\
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n2) [above=of n1] {1};
+  \node (n3) [right=of n1]  {2};
+  \node (n4) [below=of n1]  {3};
+  \node (n5) [below=of n3]  {4};
+  \node (n6) [right=of n3]  {5};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw  [very thick, green]  (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, green]  (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw  [very thick, green] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw   (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   (n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   [very thick,  green]  (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw [very thick, green] (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+The total sum of weights using Dijkstra's algorithm is 26. The total sum of weights using MST is 23. Therefore, since the sum of the weights of Dijkstra's algorithm is more than that of the MST, we can proves that Dijkstra's algorithm does not always provide an MST.\\
+\end{proof}
+
+\end{document}

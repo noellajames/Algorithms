@@ -1,0 +1,206 @@
+% Notes from Class 7 - 02/08/2017
+
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Divide and Conquer}
+\date{02/07/2017}
+\author{Noella James}
+\maketitle
+
+\section{Paradigm}
+
+\begin{enumerate}
+\item Break problem into sub-problems on smaller input size.
+\item Solve each sub-problem recursively.
+\item Combine solutions to overall solution.
+\end{enumerate}
+
+\section{Example: Merge Sort}
+
+\framebox{7}
+\framebox{8}
+\framebox{1}
+\framebox{5}
+\framebox{12}
+\framebox{3}
+\framebox{6}
+\framebox{9}
+
+\begin{enumerate}
+\item Divide the array into two halves
+\item Sort each half
+\item Merge the two halves
+\end{enumerate}
+
+\framebox{1}
+\framebox{5}
+\framebox{7}
+\framebox{8}
+\mbox{      }
+\framebox{3}
+\framebox{6}
+\framebox{9}
+\framebox{12}
+ \\\\
+\framebox{1}
+\framebox{3}
+\framebox{5}
+\framebox{6}
+\framebox{7}
+\framebox{8}
+\framebox{9}
+\framebox{12}
+\\\\
+
+\section{Recurrence}
+
+$T(n) =$ run-time on $n$ numbers.\\
+\textbf{Recurrence:} $T(n) = 2 \times T(\frac{n}{2}) + \theta(n)$\\
+
+
+\subsection{How to solve recurrences?}
+
+Two methods for figuring out the solution.\\
+One method for proving the solution once you already know it.
+
+\textbf{Example:} \\
+$T(n) = 2 T(\frac{n}{2}) + \theta (n)$\\
+$T(1) = \theta (1) $
+
+\textbf{First:} Work with explicit constants\\
+$T(n) = 2 T(\frac{n}{2}) + cn$\\
+$T(1) = c$
+
+\subsection{First Method:} Recursion Tree
+
+$T(n) \rightarrow cn$\\\\
+$T(\frac{n}{2}) \qquad T(\frac{n}{2}) \qquad \rightarrow 2 \,c \,\frac{n}{2} = c\,n$\\\\
+$T(\frac{n}{4}) \quad T(\frac{n}{4}) \quad T(\frac{n}{4}) \quad T(\frac{n}{4}) \qquad \rightarrow 4 \,c \,\frac{n}{4} = c\,n$\\\\
+
+Overall depth of the tree = $\log n$\\\\
+\begin{note}
+every layer is $c\,n$
+\end{note}
+
+\begin{note}
+Overall:  $c \, n \log n = \theta (n \log n)$ where $c$ is a constant.
+\end{note}
+
+\textbf{Why is it so important to work with explicit constants?}\\
+
+\textsl{Example}\\\\
+$T(n) = 2\,T(n-1) + \theta (1)$\\\\
+$T(1) = \theta(1)$\\\\
+
+$T(n) \rightarrow \theta(1) \rightarrow c$\\\\
+$T(n-1) \qquad T(n-1) \rightarrow 2\,\theta(1) = \theta(1) \rightarrow 2\,c$\\\\
+$T(n-2) \quad T(n-2) \quad T(n-2) \quad T(n-2) \rightarrow 4\,\theta(1) = \theta(1) \rightarrow 4\,c$\\\\
+
+Assuming the total is $n \theta(1) = \theta(n)$ is WRONG.\\
+$T(n) \ge 2^{(n-1)}$. \\  we have this issue because we didn't use explicit constants!
+
+\subsection{Iteration Method}
+Unroll the recurrence
+
+$T(n) = 2\,T(n-1) + c$\\\\
+$T(1) = c$\\\\
+
+$T(n) = 2\,T(n-1) + c \\= 2(2\,T(n-2)+c) +c\\
+	= 2(2(2\,T(n-3)+c)+c)+c\\
+	=2(2(2 \ldots 2(T(1 +c) +c) + c) +\ldots ) + c$\\\\
+
+Suppose that $T(1) = c$\\
+$\therefore T(n) = 2^{n-1}\,c + 2^{n-2}\,c + 2^{n-3} \,c + \ldots + c$\\\\
+* this is very subtle and delicate. you must be very careful *\\
+$\therefore c ( 2^{n-1} + 2^{n-2} + 2^{n-3} + \ldots + 1) = c (2^n -1)$\\\\
+$\therefore c\,(2^n -1) = \theta(2^n)$\\
+\begin{note}
+Geometric Sum: $a + a\,q + a\,q^2 + a\,q^2 + \ldots + a\,q^{n-1} = a\, \frac{q^n -1}{q-1}$
+\end{note}
+
+\subsubsection{Example}
+$T(n) = 2\, T(\frac{n}{2}) + c\,n$\\
+$T(1) = c$\\\\
+
+$T(n) = 2 \, T(\frac{n}{2}) + c\,n = 2 (2 \, T(\frac{n}{4}) + c\,\frac{n}{2}) + c\,n\\
+= 2^{\log n} T(1) + 2^{\log {n-1}} c\,n / 2^{\log {n-1}} + \ldots + 2 \, c\, \frac{n}{2} + c \, n\\
+= n\,c\,(\log n + 1) = \theta(n \log n)$ 
+
+\subsection{Substitution method: Proof by Induction}
+\subsubsection{Example 1}
+$T(n) = 2\, T(\frac{n}{2}) + c\,n$\\
+$T(1) = c$\\\\
+
+\textbf{Claim:} $T(n) = c\; n \; (\log n + 1) \quad \forall n$
+
+\begin{proof} 
+By induction on $n$\\
+Base: $n = 1 \quad  T(1) = c = c \cdot (\log 1 + 1) = c$\\
+Hypothesis: True for $n-1$\\
+Induction or Step $n$:\\
+$T(n) = 2\;T(\frac{n}{2}) + c\,n\\
+= 2\,c\,\frac{n}{2} (\log{\frac{n}{2}}) + c\,n\\
+= c\,n\,(\log n - 1 + 1) + c\,n\\
+= c\,n\,\log n + c\,n$
+\end{proof}
+
+\begin{note}
+$\\\log {\frac{a}{b}} = \log a - \log b$\\
+$\log 2 = 1$
+\end{note}
+
+\subsubsection{Example 2}
+
+$\\T(n) = 2\, T(n-1) + 1$\\
+$T(1) = 1$\\\\
+
+\textbf{Claim:} $T(n) = 2^n - 1 \quad \forall n$
+
+\begin{proof} 
+By induction on $n$\\
+Base: $n = 1 \quad  T(1) = 1 = 2^1 - 1 = c$\\
+Hypothesis: True for $n-1$\\
+Induction or Step $n$:\\
+$T(n) = 2\;T(n-1) + 1\\
+= 2 (2^{n-1} -1) + 1\\
+= 2^n - 2 + 1\\
+= 2^n -1$
+\end{proof}
+
+\section{Master Theorem}
+$T(1) = \theta(1) \qquad T(n) = a\, T(\frac{n}{b}) + \theta(n^k)\\
+a \ge 1 \quad b \ge 1 \qquad a, b$ are constants. $k$ is a non-negative constant\\
+
+Then\\
+\begin{enumerate}
+\item $k < \log_b a \quad \Rightarrow \quad T(n) = \theta(n^{\log_b a})$
+\item $k = \log_b a \quad \Rightarrow \quad T(n) = \theta(n^{\log_b a} \log n)$
+\item $k > \log_b a \quad \Rightarrow \quad T(n) = \theta(n^k)$
+\end{enumerate}
+	
+	
+\subsection{Example}	
+$T(n) = a T(\frac{n}{b}) + \theta(n) \quad, a < b\\
+T(n) = \theta(n)$	
+
+\end{document}

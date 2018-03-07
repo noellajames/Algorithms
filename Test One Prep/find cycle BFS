@@ -1,0 +1,23 @@
+BFS (G = (V,E))
+
+initialize array mark of size |V| with 0
+T = {}
+L_o is {s}
+mark s with 1
+set i to 1
+repeat
+	Li is all the unmared neighbors of Li-1
+	add each edge to tree T
+	mark Li
+	set i to i-1
+until there are no unmaked neighborrs
+return T
+
+Find Cycle (G)
+T = BFS(G)
+Find an edge (u,v) in G that is not in T //there is a cycle
+if there is no such edge
+	return false; //no cycle
+endif
+Find the closest ancestor to u and v
+

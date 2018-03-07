@@ -1,0 +1,58 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 5}
+\date{03/17/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 5-1: Job Assignment}
+
+\subsection*{Solution}
+When reducing to max-flow, there does exist an assignment of workers to tasks such that every task gets completed. This question is an application of a bipartite graph. The following demonstrates a possible corresponding flow network.\\
+A bipartite graph is an undirected graph $G = (V,E)$. The nodes of the graph can be partitioned into two sets $X$ and $Y$ such that $V = X \bigcup Y$ and all the edges are from the nodes in $X$ to the nodes in $Y$ and vice versa.\\
+We represent each individual worker as a node in $X$. We also represent each individual task as a node in $Y$. 
+For each entry in matrix $M$, we draw a directed edge from $X_{worker}$ to $Y_task$. The capacity of the edge is $M_{[worker, task]}$, or the amount of time the worker takes to complete the task.\\
+We create a start node $s$ that has an outgoing edge to every worker in $X$. The capacity of each edge is of 10 hours since that's the maximum amount of time a worker can work daily.\\
+We also create an end node $t$ that has an incoming edge from every task in $Y$. The capacity of each edge is of $T[Y_task]$ since that is the amount of time required to complete the task.\\
+This completes the representation of the problem as a network flow problem. 
+
+\subsection*{Determining if all the tasks get done}
+We execute the Ford-Fulkerson Algorithm on the graph that we have constructed. The algorithm returns the maximum flow $f$. All the tasks are completed if the sum of all the hours of the tasks in list $T$ is equal to $v(f)$. 
+
+\subsection*{Proof of Reduction:}
+The problem requires the following:
+1. No worker works more than 10 hours a day.
+2. A task can be done by any number of workers.
+3. Each worker can only dedicate a certain amount of time to each task.
+4. Each task requires a certain amount of time to complete.
+
+The first requirement is solved by ensuring that the capacity of each edge from the start node $s$ to each worker node in $X$ is 10 hours.\\
+The second requirement is resolved by ensuring that each task in $Y$ can have multiple incoming edges from worker nodes in $X$. \\
+The third requirement is resolved by ensuring that the capacity for each such edge from $X$ to $Y$ is equal to the time each worker can dedicate to that task.\\
+The fourth requirement is resolved by ensuring that the capacity of each edge from $Y$ to the sink node $t$ is equal to the amount of hours it takes to complete that task.\\
+The sum of all capacities into the sink node $t$ is the total time required to complete all the tasks. The sum of all capacities from the start node $s$ to the nodes in $X$ is equal to the total number of worker hours available. Thus, the maximum flow in the graph is equal to the number of hours of tasks that can be completed. Thus if the flow is equal to the total time required to complete all the tasks, then all the tasks are completed. This completes the proof of reduction.  
+
+
+\end{document}

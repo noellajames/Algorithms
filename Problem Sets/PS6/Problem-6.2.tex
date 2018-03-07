@@ -1,0 +1,97 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 6}
+\date{4/9/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 6-2: Reductions and algorithms}
+
+\subsection*{Solution 6.2a}
+
+No, it is not possible to determine the existence of a vertex cover of size $|V| - 1000$ in polynomial time.\\
+
+\subsubsection*{Reduction}
+
+In an independent set of size, $|V|/\log^{3}|V|$ has the vertex cover of size $|V| - |V|/\log^{3}|V|$. If $|V|/\log^{3}|V| \leq 1000$, then we remove $1000 - |V|/\log^{3}|V|$ edges, thus we have a vertex cover of size $|V| - 1000$.\\
+
+Let Graph $G = (V,E)$ have $n = |V|$ vertices $v_1, v_2, \ldots v_n$. We create a graph $G' = (V', E')$ by removing edges such that the number of edges moved is $1000 - |V|/\log^{3}|V|$. Thus, $G'$ has a vertex cover of size $|V| - 1000$. This reduction from $G$ to $G'$ can be done in polynomial time as it involved removing at most 1000 edges in the adjacency list matrix.
+
+
+\begin{lem}
+Vertex Cover of size ($|V| - 1000$) $\leq _p$ Independent Set
+\end{lem}
+\begin{proof}
+If we have a black box to solve Independent Set, then we can decide whether G' has a vertex cover of size ($|V| - 1000$) by asking the black box whether G has an independent set of size at least $|V|/\log^{3}|V|$.
+Thus, this completes the proof.\\
+\end{proof}
+
+\begin{lem}
+Independent Set  $\leq _p$ Vertex Cover of size ($|V| - 1000$)
+\end{lem}
+\begin{proof}
+If we have a black box to solve Vertex Cover of size ($|V| - 1000$), then we can decide whether G has an independent set of size at least $|V|/\log^{3}|V|$ by asking the black box whether G' has a vertex cover of size at most $|V|-1000$.
+Thus, this completes the proof.\\
+\end{proof}
+
+
+\subsection*{Solution 6.2b}
+
+We will first prove that a clique and independent set have the same complexity (that both are NP). \\
+
+A clique is a subset of vertices of a graph such that there is an edge between any two vertices in a clique.\\
+
+Thus, if $G = (V,E)$ is a graph, a clique is a subset $S$ of $V$ such that for every $(u,v)$ in $S$ there is an edge $(u,v)$ in $G$.\\
+
+We define the complement of $G$ as $G*$.  $G*$ has the /same set of vertices as $G$.  For every edge $(u,v)$ in $G$, there is no edge $(u,v)$ in $G*$.  For every edge $(u,v)$ not in $G$, there is an edge $(u,v)$ in $G*$.\\
+
+Thus, the problem of finding a clique of size $k$ in $G$ is equivalent to finding an independent set of size $k$ in $G*$.  Assume $S$ is such an independent set in $G*$.  Thus by definition of independent set for every node $u,v$ in $S$ there is not edge $(u,v)$ in $G*$.  By definition of construction of $G*$, it implies that for every node $u, v$ in $S$, there is an edge in $G$.  Thus, the set $S$ is a clique in $G$.\\
+
+We can prove that\\
+
+\begin{lem}
+Clique $\leq _p$ Independent Set
+\end{lem}
+\begin{proof}
+If we have a black box to solve Independent Set, then we can decide whether G has a clique of size at least k by asking the black box whether G* has an independent set of size at least k.
+Thus, this completes the proof.\\
+\end{proof}
+
+\begin{lem}
+Independent Set  $\leq _p$ Clique
+\end{lem}
+\begin{proof}
+If we have a black box to solve Clique , then we can decide whether G has an independent set of size at least k by asking the black box whether G* has a clique of size at least k.
+Thus, this completes the proof.\\
+\end{proof}
+
+No, it is not possible to determine the existence of a clique of size $|V|/\log^{3}|V| + 1000$ in polynomial time.\\
+
+\subsubsection*{Reduction:}
+
+Let Graph $G$ has an independent set of size $|V|/\log^{3}|V|$. Thus, the complement graph $G*$ will have a clique of size $|V|/\log^{3}|V|$.\\
+Now we reduce graph $G$ by selecting 1000 vertices $v_1, \ldots v_1000$ in a set $S$ such that there exists an edge between any two vertices in the set $S$. Thus, the complement graph $G*$ will have a clique of size $|V|/\log^{3}|V|+1000$. This concludes the reduction.
+
+\end{document}

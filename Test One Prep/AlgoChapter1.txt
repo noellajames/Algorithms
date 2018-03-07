@@ -1,0 +1,116 @@
+Question 1:
+
+False
+
+Stable Matching counter example
+M prefers W' over W
+M' prefers W over W'
+W prefers M over M'
+W' prefers M' over M
+
+The pairs are
+(M, W')
+(M', W)
+
+Question 2:
+
+True
+
+M prefers W over W'
+M' prefers W over W'
+W prefers M over M'
+W' prefers M over M'
+
+The pairs are
+(M, W')
+(M', W)
+
+This pair is unstable because both M and W have partners who they do not prefer as compared to each other, so they will leave their partners and become their own pair (M, W) which proves that this is unstable matching. Therefore, the previous claim is true.
+
+Actual proof: 
+Suppose in S', given these preference: 
+M prefers W over W'
+M' prefers W over W'
+W prefers M over M'
+W' prefers M over M'
+and the pairs (M, W') and (M', W) exist. This is a contradiction because M would always pair with W when he proposed. If W was free, she would say yes to M if he proposed. If W was paired with M' and M still proposed, W would leave M' for M because M is higher up on W's preference list. Therefore, the pairs (M, W') and (M', W) cannot exist and thus the initial claim that in every stable matching S, the pair (M, W) exists is true.
+
+if the pair (M, W') exists, then either W rejected M when M proposed, or W' has a higher precdence to W.  This is a contradiction.
+If W rejected M, then she was engaged to M' and thus M' has higher preferance of M (again a contradiction).
+Thus the pair (M,W') and (M',W) results in an instability in S'.
+
+Question 3:
+
+Initially all the tv shows for station A are ordered highest to lowest and all the tv shows for station B are ordered lowest to highest. 
+
+All the time slots are free.
+
+While there is a free time slot
+	Choose the highest rated show from station A that has not been allocated
+	Choose the lowest rated show from station B that has not been allocated
+	Assign the shows to the same time slot.
+Endwhile
+Return the set S of set time slots.
+
+There are two TV stations, each that have two shows:
+TVA		TVB
+RA1		RB1
+RA2		RB2
+
+Suppose the ratings are that RB2 > RA1 > RB1 > RA2
+The pairs for the time slot, following the algorithm, are (RA1, RB1) and (RA2, RB2).
+Therefore, TVA and TVB will each win one time slot. 
+If TVB tries to win both time slots, they can change their shows around and make the pairs (RA1, RB2) and (RA2, RB1). But at the same time, TVA can change their tv schedule and move their shows, making the pairs (RA2, RB2) and (RA1, RB1) thus resulting in both TVA and TVB winning one time slot. This forms an equilibrium in the tv schedule and thus the matching is stable.
+
+Question 4:
+ (m,w)
+ (h,(s1,s2))
+
+Initially all s->S and h->H are free.
+While there is a hospital that needs residents and hasn't offered to a student
+	Choose such a hospital h
+	Let s be the highest-ranked student in h's preference list to whom h hasn't offered the 	position to as yet & the student has h in its preference list
+	If s is free then
+		(h, s) allocates the position and h marks the position as occupied
+	Else s is currently commited to h'
+		If s prefers h' to h
+			h keeps the position as free
+		Else if s prefers h to h'
+			(h, s) allocates the position and h marks the position as occupied
+			h' opens up a position as free
+		Endif
+	Endif
+Endwhile
+Return the set of pairs
+
+Disproving Instability #1
+
+- s is assigned to h, and
+- s' is assigned to no hospital, and
+- h prefers s' to s.
+
+The Set S contains (h, s):
+For (h,s) to occur, 
+case 1: s and s' had both h in it's preference list but h preferred s to s' (CONTRADICTION TO #3)
+case 2: s' didn't have h in it's preference list. Thus (h, s) does not provide an instability as s' was not interested in h anyway.
+
+Disproving Instability #2
+
+- s is assigned to h, and 
+- s' is assigned to h', and
+- h prefers s' to s, and
+- s' prefers h to h'
+
+The instability that this situation is describing would involve two pairs, (h, s) and (h', s') with the properties that 
+
+-h prefers s' to s, and
+-s' prefers h to h'
+
+In the execution of the algorithm that produced S, h's last offer was, by definition, to s. Now, it is asked whether or not h offered the position to s' at some earlier point in this algorithms execution. If the hospital h didn't, then s must occur higher on h's preference list that s', contradiction our assumption that h prefers s' to s. If the hospital did, then the hospital was rejected by s' in favor of the other hospital h'', whom s' prefers to h. It turns out that h' is the final choice of s', so either h'' = h', or, s' prefers h' to h''; either way this contradicts our assumption that s' prefers h to h'. 
+It follows that S is stable matching.
+
+
+
+
+
+

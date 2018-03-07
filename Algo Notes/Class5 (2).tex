@@ -1,0 +1,224 @@
+% Notes from Class 5
+
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\section{$O$ notation}
+$\ge \Omega$\\
+$= \Theta$\\
+$\le O$\\
+
+\section{Minimum Spanning Tree}
+
+\textsl{Input:} Connected undirected weighted $G = (V,E)\quad W:E \rightarrow \mathbb{R}$\\
+\textsl{Output:} Subset of edges $T \subseteq E$ that connects all vertices and $min \; w(e)\,, e \in T$.  ($T$ = tree)\\
+
+\subsection{Example}
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n2) [above=of n1] {1};
+  \node (n3) [right=of n1]  {2};
+  \node (n4) [below=of n1]  {3};
+  \node (n5) [below=of n3]  {4};
+  \node (n6) [right=of n3]  {5};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw  [very thick, green]  (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, green]  (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw  [very thick, green] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw  [very thick, red]  (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   (n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   [very thick,  green]  (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw [very thick, green] (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+The edge between $2$ and $3$ with a weight of $10$ is an edge to definitely remove because it is unnecessary (since there is a cycle) and it also weighs a lot.\\
+
+\textcolor{green}{Green} good edges to keep as their weights are small.\\
+\textcolor{red}{Red} not so good due to large weights.
+
+\subsection{Applications:}
+
+\begin{itemize}
+	\item network design
+	\item clustering
+	\item vision
+	\item approximation algorithms
+\end{itemize}
+
+\subsection{Cut Lemma}
+
+ \begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (1,1) {} ;
+  \node (n2) at (6,3) {}  ;
+  \node (n3) at (3,2)  {} ;
+  \node (n4) at (4,4)  {$u$};
+  \node (n5) at (5,7)  {$v$};
+  \node (n6) at (3,9) {} ;
+  \node (n7) at (7,1) {} ;
+  \node (n8) at (1,8) {} ;
+  \node (n9) at (1,11) {} ;
+
+ \draw (-2,5) .. controls (3,6) and (6,6) .. 
+ node[very near start, above, draw=none, fill=none, ] {$V-C$}
+ node[very near end, below, draw=none, fill=none, ] {$C$}
+ 	(11,4);
+ 
+  \foreach \from/\to in {n4/n5,n1/n6}
+    \draw (\from) -- (\to);
+    
+\end{tikzpicture}
+
+\begin{lem}
+Let $C \subseteq V\; (u,v) \in E\,, v \notin C\;, u \in C$. $(u,v)$ is a lightest edge of this kind.  There there exists a minimum spanning tree that contains $(u,v)$.
+\end{lem}
+\begin{proof}
+Suppose $T$ is a MST that does not contain $(u,v)$.\\
+
+ \begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (1,1) {$u$} ;
+  \node (n2) at (6,3) {}  ;
+  \node (n3) at (3,2)  {} ;
+  \node (n4) at (4,4)  {$u'$};
+  \node (n5) at (5,7)  {$v'$};
+  \node (n6) at (3,9) {$v$} ;
+  \node (n7) at (7,1) {} ;
+  \node (n8) at (1,8) {} ;
+  \node (n9) at (1,11) {} ;
+
+ \draw (-2,5) .. controls (3,6) and (6,6) .. 
+ node[very near start, above, draw=none, fill=none, ] {$V-C$}
+ node[very near end, below, draw=none, fill=none, ] {$C$}
+ 	(11,4);
+ 
+  \foreach \from/\to in {n4/n5,n1/n4,n5/n6}
+    \draw (\from) -- (\to);
+    
+  \draw [dotted] (n1) -- (n6)  ;
+    
+\end{tikzpicture}
+
+$T$ connected $u$ and $v$\\ 
+
+$\Rightarrow$ There must exist an edge $(u',v') \in T\; u' \in C \,, v' \notin C \quad w(u',v') \ge w(u,v)$\\
+Thus, weight of $T \, \bigcup \, \{ (u,v) \} - \{(u', v')\} \triangleq T'$ is no larger than $T$'s weight.
+
+\begin{note}
+Note that $T'$ is a tree that connects all vertices.  Because a path $a \rightsquigarrow u' \rightarrow v'  \rightsquigarrow  b$ in $T$ becomes a path $a \rightsquigarrow u'  \rightsquigarrow u \rightarrow v   \rightsquigarrow v' \rightsquigarrow  b$ 
+\end{note}
+\end{proof}
+
+\begin{note}
+Observation: If all edge weights are distinct, the MST is unique, because the weight of $T'$ is strictly smaller than the weight of $T$
+\end{note}
+
+\section{Prim's Algorithm}
+
+Chose the shortest edge when in a cut. 
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {b};
+  \node (n2) [above=of n1] {a};
+  \node (n3) [right=of n1]  {c};
+  \node (n4) [below=of n1]  {e};
+  \node (n5) [below=of n3]  {f};
+  \node (n6) [right=of n3]  {d};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  [very thick, red] (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$5$};
+  \draw  [very thick, green]  (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, green]  (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$6$};
+  
+  \draw  [very thick, green] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+
+  \draw  [very thick, red]  (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw   [very thick, red] (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};
+
+  \draw   [very thick, red] (n3) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$9$};
+  \draw   [very thick,  green]  (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+
+  \draw [very thick, green] (n5) -- (n6) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+ 
+\end{tikzpicture}\\\\
+
+Notice that the edges we choose here are the same as in the previous example.
+
+\subsection{Algorithm}
+
+Please refer Algorithm $1$.  $\Pi(u)$ holds the parent for $u$.  The Tree $T$ is constructed using edge $(\Pi(u),u)$.
+\begin{algorithm}
+\caption{Prim's Algorithm}\label{Prim's Algorithm to find MSt}
+\begin{algorithmic}[1]
+\Procedure{Prim's Algorithm}{$G,s$}\Comment{$G(V,E)$ weighted graph w/non-negative weights, $s \in V,\; s$ is an arbitary vertex in $V$}
+	\State $Q \gets V$\Comment{$Q$ is a priority queue containing all vertices.}
+	\State $\forall v \in V - \{s\} \,,\quad key(v) \gets \infty$ \Comment{for all vertices except for $s$}(
+	\State $key(s) \gets 0$ \Comment{$s$ is an arbitrary vertex}
+	\State $T \gets \{\}$
+	\While {$Q \neq 0$}
+		\State $u \gets $Extract-Min($Q$) \Comment{ The edge we take to T is $(\Pi(u), u)$}
+		\State $ T \gets T \bigcup (\Pi(u),u)$
+		\ForAll{ neighbor $v$ of $u\, $}
+			\If{$v \in Q$}
+				\State Decrease-Key($Q,v,w(u,v)$)\Comment{ if $key(v) \ge w(u,v)$ then $key(v) = w(u,v)$}
+				\State $\Pi(v) \gets u$
+			\EndIf
+		\EndFor
+	\EndWhile 
+	\State \textbf{return} MST for $G$
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Run Time}
+$m = |E|$ (\# of edges) \\
+ $n = |V|$ (\# of nodes) \\
+ Runtime: $O( n \log n + m \log n) $\\
+ Runtime does not change on where you start.
+ 
+ 
+
+ 
+ 
+
+\end{document}

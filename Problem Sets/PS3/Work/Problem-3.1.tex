@@ -1,0 +1,92 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 3}
+\date{02/11/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section{Problem 3-1: Updating MST after edge addition.}
+\textbf{Input:} $G(V,E)$ weighted graph w/non-negative weights. $T = MST(G) \,, T = (V, E') \,,E' \subseteq E$. $e \in V \times V - E.$ $e = (u,v)$\\
+\textbf{Output:} MST of Graph $G' = (V,E  \bigcup \{e\})$\\
+\textbf{Explanation of Algorithm:} For this algorithm, we must use the cycle lemma. Let $e = (u,v)$ where $u,v \in V$. There exists a path from $u$ to $v$ in $T$. Inclusion of edge $e$ results in a cycle in $T$. So the algorithm finds a cycle in $T$ and removes the highest weighted edge in the cycle.\\
+\subsection{Algorithm}
+ Please refer Algorithm 1 MST Edge addition.\\
+\begin{algorithm}
+\caption{MST Edge addition}\label{Updating MST after edge addition}
+\begin{algorithmic}[1]
+\Procedure{Edge Addition}{$G, T, e$}\Comment{$G(V,E)$ weighted graph w/non-negative weights. $T = MST(G) \,, T = (V, E') \,,E' \subseteq E$. $e \in V \times V - E.$ $e = (u,v)$}
+	\State Make-Set($u$)
+	\State Make-Set($v$)
+	\State $U \gets $ Union($u$, $v$) \Comment{$U$ is the representative of the set after the Union operation}
+	\State $e' \gets e$
+	\State $w' \gets w(e)$\Comment{Initialize $w'$ to the weight of edge $e = (u,v)$}
+	\ForAll{ edges $f=(s,t) \in E'$ such that Find($s$) or Find($t$) = $U$}
+		\If{Find-Set($s$) $\notin U$ } 
+			\State $U \gets $Union($U$,$s$) \Comment{Update representative of the set}
+		\Else
+			\State $U \gets $Union($U$,$t$) \Comment{Update representative of the set}
+		\EndIf
+		\If{$w' < w((s,t))$} \Comment{Found a heaver edge}
+			\State $e' \gets (s,t)$
+			\State $ w' \gets w((s,t))$
+		\EndIf
+	\EndFor
+	\If{$e' \neq e$} \Comment{An existing edge in the graph $G$ is heavier than $e$}
+		\State $E'' \gets E' \bigcup {e} - {e'}$
+		\State $T' \gets (V,E'')$
+	\Else
+		\State $T' \gets T$	
+	\EndIf
+	\State \textbf{return} $T'$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Complexity}
+$m = |E'|$ (\# of edges) \\
+$n = |V|$ (\# of nodes) \\
+$m \leq n-1$\\
+Line $7$ in Algorithm $1$ loops $m$ times. Within the loop, Find-Set is called, which has a complexity of $\log n$. Thus, the overall complexity is $O( n \log n)$.
+\pagebreak
+\subsection{Correctness}
+\begin{lem}
+The addition of the edge $e$ to $T$ results in a cycle. The edge $e$ is added to the MST if there exists another edge $e'$ in the cycle whose weight is greater than the weight of $e$.
+\end{lem}
+\begin{proof} 
+In T, which is an MST of G, there is a path from vertex $u$ to $v$. Therefore, the addition of the edge $e$ to $T$ will result in a cycle since there are multiple paths from vertex $u$ to $v$. \\
+Assume an edge $e'$ such that the weight of $e'$ is greater than the weight of $e$ and $e'$ is part of the cycle. \\
+Consider $T' \triangleq T - \{ e' \} \bigcup \{ e\}$\\
+\textsl{Claim 1:} Weight of $T'$ only smaller or equal to weight of $T$ because $e'$ is the heaviest edge.\\
+\textsl{Claim 2:} $T'$ spans all vertices.\\
+Thus, the edge $e'$ can be removed and replaced by $e$, and we get a Tree $T$ that has a smaller total sum of weights.
+If no such $e'$ exists, $e$ is the heaviest edge in the cycle and is not added to $T$. 
+\end{proof}
+
+\end{document}

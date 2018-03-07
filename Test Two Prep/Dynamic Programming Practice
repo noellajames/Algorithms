@@ -1,0 +1,293 @@
+Chapter 6 - Question1
+Part A
+1 - 8 - 6 - 3 - 6
+
+S - {}
+
+current node - 8
+S - {8}
+
+3 - 6
+
+current node - 6
+S - {8 6}
+
+return S
+
+counter example:
+8 - 9 - 8
+
+Part B
+1 - 8 - 6 - 3 - 6
+S1 = {1 6 6}
+S2 = {8 3}
+the example itself is its counterexample since maximum is 14
+
+Part C
+Assuming there is an optimal solution O, either n is in O or it is not. Assuming n is not in the optimal solution, 
+OPT(n) = OPT(n-1)
+Assuming n is in the optimal solution,
+OPT(n) = w_n + OPT(n-2)
+The final recurrence relationship is
+OPT(n) = max(w_n + OPT(n-2), OPT(n-1))
+
+Find_Independent_sets (G = (V,E))
+S <- {}
+Array M[-1..n]
+M[-1] <- 0
+M[0] <- 0
+For i = 1 to n
+	If (M[i-2] + w_i > M[i-1]) 
+		M[i] = M[i-2] + w_i
+		S <- S U {i}
+	Else
+		M[i] = M[i-1]
+	EndIf
+EndFor
+Return S
+
+Complexity
+The complexity of Find_independent_sets is O(n) where n = |V|. This is because we iterate through all of the vertices once.
+
+Correctness
+We will prove the correctness of this algorithm with a proof by induction
+
+Lemma: Find_independent_sets will always find the maximum total weight of an independent set in G.
+
+Base Case: n = 0
+Find_Independent_sets will return an empty set {} because there are no nodes in the graph. This is the correct solution.
+
+Induction hypothesis: Assuming Find_Independent_Sets returns the correct set for k nodes. 
+We will prove Find_Independent_Sets will return the correct set of k+1 nodes.
+
+Induction Proof:
+OPT(k+1) = max(w_(k+1) + OPT(k-1), OPT(k))
+If k+1 is in the Optimal Solution O, then the maximum weight would be the weight of k+1 and the optimal solution of k-1, or the nearest node that k+1 does not share an edge with since if they share an edge, they are not part of an independent set.
+If k+1 is not in the Optimal Solution O, the the maximum weight would be the OPT(k) since the weight of k+1 wouldn't be added.
+Therefore, since the Optimal Solution must include whether or not k+1 is in the optimal solution, Find_Independent_sets returns the correct set of nodes for k+1 since it determines whether or not k+1 is in the optimal solution are returns the correct set since it determines if the inclusion of k+1 increases the total sum.
+
+
+2
+Part A
+	1 	2 	3
+l   5   10  5
+h   1   50  500
+
+Part B
+Optimal Solution O could contain l_n or contain h_n
+If Optimal Solution O contains l_n
+OPT(n) = OPT(n-1) + l_n
+If Optimal Solution O contains h_n
+OPT(n) = OPT(n-2) + h_n
+Therefore, the recurrence relationship is
+OPT(n) = max(OPT(n-1) + l_n, OPT(n-2) + h_n)
+
+Find_Max_Value (l_1..l_n, h_1..h_n)
+Array M[-1..n]
+M[-1] <- 0
+M[0] <- 0
+For i = 1 to n
+	If ((M[i-1] + l_i) >= (M[i-2] + h_i))
+		M[i] = M[i-1] + l_i
+	Else
+		M[i] = M[i-2] + h_i
+	EndIf
+EndFor
+Return M[n]
+0 0 5 55 505
+Print_Max_Value (l_1..l_n, h_1..h_n, M)
+For i = n to 1
+	If ((M[i-1] + l_i) >= (M[i-2] + h_i))
+		Print low i
+	Else
+		Print high i
+		Print no work for i-1
+		i <- i-1
+	EndIf
+EndFor
+
+Question 4
+Part A: The algorithm doesn't take into account the cost for moving, so it doesn't solve the problem
+
+Part C:
+There are two different options for an ith month: either N_i is chosen or S_i is chosen
+
+First Option: Staying in the same office as the previous month NY
+OPT(n, N) = OPT(n-1, N) + N_n
+Second Option: Moving to the different office from SF to NY
+OPT(n, N) = M + N_n + OPT(n-1,S)
+Third Option: Staying in the same office as the previous month SF
+OPT(n, S) = OPT(n-1, S) + S_n
+Fourth Option: Moving to the different office from NY to SF
+OPT(n, S) = M + S_n + OPT(n-1,N)
+
+OPN_N(n) = N_n + min(M+ OPT_S(n-1) , OPT_N(n-1))
+OPN_S(n) = S_n + min(OPT_S(n-1) ,M + OPT_N(n-1))
+
+Find_Min_Value(M, N, S, n)
+Array N_vals[0..n]
+Array S_vals[0..n]
+N_vals[0] <- 0
+S_vals[0] <- 0
+For i = 1..n
+	N_vals[i] = N_i + min(M + S_vals[i-1] , N_vals[i-1])
+	S_vals[i] = S_i + min(S_vals[i-1] , M + N_vals[i-1])
+EndFor
+Return min(N_vals[n] , S_vals[n])
+
+TODO fix above algorithm and correctness proof
+
+Correct Algorithm: 
+
+Find_Min_Value(M, N, S, n)
+Array vals[0..n][NY,SF]
+vals[0][NY] <- 0
+vals[0][SF] <- 0
+For i = 1..n
+	vals[i][NY] = N_i + min(M + vals[i-1][SF] , vals[i-1][NY])
+	vals[i][NY] = S_i + min(vals[i-1][SF] , M + vals[i-1][NY])
+EndFor
+Return min(vals[n][NY], vals[n][SF])
+
+Correctness Proof:
+
+Lemma: Find_Min_Value will always find the minimum total value for a span of n months.
+
+Base Case: n = 0
+When n = 0, meaning when there are 0 months, the total cost is 0. This is correct you are not staying a certain place or moving in 0 months, so no money is spent.
+
+Induction hypothesis: 
+Assuming Find_Min_Value returns the minimum cost for k months. 
+We will prove Find_Min_Value will return the minimum cost of k+1 nodes.
+
+Induction Proof: 
+With the k+1th month, there are two options that could happen: You could stay in the same location, or you could move to the different location. That being said, for either location, the options would be staying in the same location plus the rent for the current month, or moving to the different location plus the rent for the current month. Determining the minimum of both will determing whether you should stay or move. In the end of the algorithm, returning the minimum of the what the minimum of starting at NY and the minimum of starting at SF would determing which city to start in as well, thus returning the lowest possible minimum value that you could spend for n months.
+
+Question 7
+OPT(i) is indicating the maximum amount of money a profit one can make day i
+if there are no shares on day i-1, the money you make 0 on day i
+OPT(i) = OPT(i-1) + p(i) - p(i-1)
+
+OPT(i) = max(OPT(i-1) + p(i) - p(i-1) , 0)
+todo: algo, correctness
+
+Algo:
+Find_maximum_value
+Array daily_vals[0..n]
+daily_vals[0] <- 0
+For i = 1..n
+	daily_vals[i] = max(daily_vals[i-1] + p(i) - p(i-1), 0)
+EndFor
+Return daily_vals[n] ?? What do you return
+
+Correctness:
+
+Lemma: Find_maximum_value will always find the best days to buy/sell stocks to maximize profits.
+
+Base Case: n = 0
+When n = 0, meaning when there are 0 days to consider, the total cost is 0. This is correct you are not buying or selling stocks in 0 days, so therefore you won't make or lose any money.
+
+Induction hypothesis: 
+Assuming Find_Min_Value returns the minimum cost for k days. 
+We will prove Find_Min_Value will return the minimum cost of k+1 days.
+
+Induction Proof: 
+With the k+1th day, there are two options that could happen: You could have stocks or you could have no stocks per each day. Therefore, the money you could make for each day is either 0 (since you have no stocks), or the total money you've made so far + the selling cost - the purcahse cost.
+
+Problem 8:
+
+Part A
+xi 1 10 10 2
+fi 1 2  4  8
+
+part B
+
+There are two options: Wait or detonate
+
+OPT(j) = max(min(xj, f(j-i)) + OPT(i))) //the maxes of all is from 1 to j-1
+OPT(n) = 
+
+
+
+Schedule-EMP(x1,...,xn)
+	Array M[0..n]
+	M[0] <- 0
+	For j = 1..n 		//N
+		M[j] = 0
+		For i = 1..j 		//N/2
+			if (M[j] < min(xj, f(j-i+1)) + M[i-1])
+				M[j] = min(xj, f(j-i+1)) + M[i-1])
+			EndIf
+        EndFor
+    EndFor
+    Return M[n]
+
+ 0 1 2 4 -
+
+ j = 3    i = 1    4
+ j = 3    i = 2    3
+ j = 3    i = 3    3
+
+ j = 4    i = 1    1
+ j = 4    i = 2    2
+ j = 4    i = 3    3
+ j = 4    i = 4    5
+
+ n = 4    M[n] = 5
+ j = 4    i = 4    5
+ EMP at j = 4
+ j = i - 1 = 3
+ j = 3    i = 1    4
+ EMP at j = 3
+ j = i - 1 = 0
+
+
+ Total Complexity: O(N * (N/2)) = O(N^2)
+
+ Print-EMP(j)
+if j = 0
+   print DONE
+Else
+   For i = 1..j 		
+		if (M[j] = min(xj, f(j-i+1)) + M[i-1])
+			Print j
+			Print-EMP(i-1)
+			Break;
+		EndIf
+    EndFor
+ EndIf
+
+ Problem 9
+ A
+ x 10 10 10  10 10  10
+ s 8  3  2.5 2  1.5 1
+ 27
+ 24.5
+ 
+ B
+ OPT(j,k)
+ j is the cuurent day
+ k is # of days since last reboot
+//no reboot
+OPT(j,k) = min(x_j, s_k) + OPT(j+1, k+1)
+//reboot
+OPT(j,k) = OPT(j+1, 1)
+
+OPT(j,k) = max(min(x_j, s_k) + OPT(j+1, k+1), OPT(j+1, 1))
+
+Find_Reboot_Schedule (x, s)
+	Array M[1..n][1..n]
+	M[n][j] = min(x_n, s_j) for j=1..n
+    For i = n-1..1
+        For k = 1..n
+            M[i,k] = max(min(x_i, s_k) + M[i+1, k+1], M[i+1, 1])
+        EndFor
+    EndFor
+    Return M[1,1]
+
+todo: redo 9 like 8 first case
+    
+
+
+
+

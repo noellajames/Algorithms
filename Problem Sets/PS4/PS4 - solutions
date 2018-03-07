@@ -1,0 +1,20 @@
+Graph G -> topological sort
+order the nodes from 0 to n
+0 is leftmost node, n is rightmost node
+O (optimal solution) is the longest path in the Grap
+For node n, n belongs to O or it doesn't
+Consider the case where n doesn't belong to optimal solution
+OPT(n) = OPT(n-1)
+Consider the case where n does belong to the optimal solution
+OPT(n) = 1 + OPT(CP(n))
+CP is closest predecessor with the largest value
+
+OPT(n) = max(OPT(n-1), 1 + OPT(CP(n)))
+
+
+To compute a topological ordering of G:
+Find a node v with no incoming edges and order it first 
+for each outgoing edge (v, u), add one of u's predecessor as v
+Delete v from G
+Recursively compute a topological ordering of G−{v}
+and append this order after v

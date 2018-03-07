@@ -1,0 +1,78 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+\begin{document}
+
+Noella James\\
+Collaborators: none\\
+
+\section{Problem 1-1: Growth}
+
+Sort the following functions so $f$ appears before $g$ if $f = O(g)$:\\
+$n^{0.99},\ \log_{1.1}n,\ 10^{1249},\ (\log_{2}n)^2,\ 2^{(\ln{\ln{n}})^2},\ 10^n,\ \ln{\ln{n}},\ 2^{n^2},\ (\log_{10}n)^n,\\ 1000n + 10^{10}$.\\
+Provide a one line explanation for each pair of consecutive functions in the sorted list.
+
+\subsection{(a)}
+The first function given is $n^{0.99}$. This function is slightly less than linear since linear is just $n^{1}$ or just $n$. Therefore, I will use $n^{0.99}$ as my base value and put in first on my sorted list.\\\\
+The current sorted list is: \\
+$n^{0.99}$\\
+
+\subsection{(b)}
+The second function given is $\log_{1.1}n$. We need to change this function to base $2$.\\
+$\log_{1.1} n  = \frac{\log_2 n }{\log_2 {1.1}} = 7.27\,log_2 n \equiv O(\log_2 n)$\\
+ Since logarithmic complexity is less than linear complexity in our sorted list, this function will become the first function in the sorted list.\\\\
+The current sorted list is: \\
+$\log_{1.1}n$,\ $n^{0.99}$\\
+
+\subsection{(c)}
+The third function given is $10^{1249}$. Although this function may seem large, it is in fact constant since there are no variables. \\
+For values of $n$, $10^{1249} <   \log_{1.1}n$. Thus for $n > {1.1}^{10^{1249}}$, the logarithmic function $\log_{1.1}n$ is less than $10^{1249}$.\\
+Thus, we can immediately determine that this will be the first value in the sorted list since constant complexity is less than logarithmic and linear complexity. \\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\log_{1.1}n$,\ $n^{0.99}$\\
+
+\subsection{(d)}
+The fourth function given is $(\log_{2}n)^2$. Taking log of $(\log_{2}n)^2$, we get $2\log_2{(\log_2{n})}$. As we determined in subsection b, $\log_{1.1}n = 7.27\log_2{n}$. Taking the log of $7.27\log_2{n}$, we get $\log_2{7.27} + \log_2{(\log_2{n})}$.\\ Thus,  $(\log_{2}n)^2$ has a lightly larger complexity than $\log_{1.1}n$ in constant factors.\\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $n^{0.99}$\\
+
+\subsection{(e)}
+The fifth function given is $2^{(\ln{\ln{n}})^2}$. Taking log of $2^{(\ln{\ln{n}})^2}$, we get $(\ln \ln n)^2$. Since we can't determine it's place from this, we take another log and get $2\ln \ln \ln n$. Taking the log of log of $(\log_{2}n)^2$, we get $1 + \log \log \log n$. Thus, $2^{(\ln{\ln{n}})^2}$ has a lightly larger complexity based on constant factors than $(\log_{2}n)^2$. \\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$\\
+
+\subsection{(f)}
+The sixth function given is $10^n$. This function is exponential, which is greater than the linear function $n^{0.99}$. \\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$,\ $10^n$\\
+
+\subsection{(g)}
+The seventh function given is $\ln{\ln{n}}$. Taking $\ln{\ln{n}}$ exponentially as a power of 2, we get $\ln n$. Similarly, taking  $\log_{1.1}n$ exponentially as a power of 2, we get $2^{7.27}n$. Thus, $\ln{\ln{n}}$ has a lower complexity than $\log_{1.1}n$. \\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\ln{\ln{n}}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$,\ $10^n$\\
+
+\subsection{(h)}
+The eighth function given is $2^{n^2}$. Taking the log of $2^{n^2}$, we get $n^2$. Similarly, taking the log of $10^n$, we get $n \log_{2}10$. Since $ n^2 > n \log_{2}10$ when $n > \log_{2}10$, we can prove that $2^{n^2}$ has a higher complexity than $10^n$.\\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\ln{\ln{n}}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$,\ $10^n$,\ $2^{n^2}$\\
+
+\subsection{(i)}
+The ninth function given is $(\log_{10}n)^n$. Taking the log of base 10 of $(\log_{10}n)^n$, we get $n \log_{10} \log_{10} n$. Taking the log of base 10 of $10^n$, we get $n$. Since $n \log_{10} \log_{10} n > n$, we can prove that $(\log_{10}n)^n$ has a higher complexity than $10^n$. Taking the log of base 10 of $2^{n^2}$, we get $n^2 \log_{2}n$. A quadratic complexity is greater than a linearithmic complexity. Therefore, $(\log_{10}n)^n$ has a lower complexity than $2^{n^2}$. \\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\ln{\ln{n}}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$,\ $10^n$,\ $(\log_{10}n)^n$ ,\ $2^{n^2}$\\
+
+\subsection{(j)}
+The last function given is $1000n + 10^{10}$. This function is linear. This has a higher complexity in terms of constant factor than $n^{0.99}$, which is slightly less than linear.\\\\
+The current sorted list is: \\
+$10^{1249}$,\ $\ln{\ln{n}}$,\ $\log_{1.1}n$,\ $(\log_{2}n)^2$,\ $2^{(\ln{\ln{n}})^2}$,\ $n^{0.99}$,\ $1000n + 10^{10}$,\ $10^n$,\ $(\log_{10}n)^n$ ,\ $2^{n^2}$\\
+
+\end{document}

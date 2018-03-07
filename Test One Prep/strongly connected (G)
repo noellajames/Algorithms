@@ -1,0 +1,23 @@
+strongly connected (G)
+
+Take a random vertex s from G
+run BFS(G,s)
+Check to see if all the vertices in G are in T
+If there is a vertex(s) missing //not strongly connected
+	return false
+endif
+
+Construct G-reverse
+copy the vertices in G to Grev
+For every edge (u,v) in G, 
+	insert edge (v,u) in Grev
+endfor
+
+run BFS(Grev,s)
+Check to see if all the vertices in Grev are in Trev
+If there is a vertex(s) missing //not strongly connected
+	return false
+endif
+
+If it is a strongly connected component, T = Trev
+	checks in 5 and 17 cannot be done for a problem that checks strong components

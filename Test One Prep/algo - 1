@@ -1,0 +1,76 @@
+
+Suppose you are given a connected graph G, with edge costs that you may assume are all distinct. G has n vertices and m edges. A particular edge e of G is specified. Give an algorithm with running time O(m + n) to decide whether e is contained in a minimum spanning tree of G.
+
+Minimum Spanning Tree - Cut Lemma
+prove that if e is the minimum cost edge between V and V-S, it is in the minimum spanning tree. If e is not the minimum cost edge, it is not in the minimum spanning tree
+
+
+Lemma: 
+If e = (u,v) is not part of MST, there is a path from u to v in MST and the path consists of edges that have a smaller weight than e.
+
+Contradiction:
+there is a path that consists of edges that have a smaller weight than e, however e=(u,v) is the edge chosen in MST
+
+there is a path from vertices u to v that consists of edges that have a smaller weight than e. If edge e = (u,v) is added to G, this results in a cycle in G. Applying the cycle lemma, where e is the most expensive edge, e does not belong to the MST of G. This results in a contradiction.
+
+
+Question 2:
+True or false? T must still be a minimum spanning tree for this new instance.
+
+If G is a graph, we can take an edge e = (u,v) whose cost is c_e and e is in the MST. By cut lemma, edge e seperates the vertices into two groups: S and V-S. The edge e is the edge with the minimum cost edge that connects S and V-S. Assume that there is an edge w connecting S to V-S. The cost of edge w, x, is greater than the cost edge e, y. Thus, y < x. Squaring both sides, we get y^2 < x^2. Thus by the cut lemma, the MST of Graph G' (the graph whose costs are squared) will include edge e and not edge w. By similar argument, the minimum spanning tree of G' is the same as the MST of G.
+
+
+	15	X
+		|
+  /		|	12
+ /		|
+Y-------Z
+7
+
+Counterexample: The Shortest path from vertices x to y would be to take the edge u = (x,y) where the cost is 15 since 15 < (7+12) 
+However, when the costs of the edges are squared, the shortest path from vertices x to y would be through the vertex z since 225 > (49+144). 
+
+Question 8:
+
+Suppose you are given a connected graph G, with edge costs that are all distinct. Prove that G has a unique minimum spanning tree.
+
+cut lemma + cycle lemma
+
+Given connected graph G, suppose it has an MST T. The MST T contains an edge e = (u,v). This edge e seperates T, by the cut lemma, into two portions: S and V-S, where the edge e is the minimum cost edge edge that connects the two portions. Suppose there is another edge e' that connects S and V-S as well. The cost of e' is greater than that of e since e' is not in the MST. 
+If e' was in the MST, this would result in a cycle since there are two paths from S to V-S. Therefore, by the cycle lemma, e' and e would both be the minimum cost edge that connects the two portions. However, since Graph G assumes that each edge cost is distinct, only one edge between e' and e can be in the MST. Therefore, since e is less than e', e is the edge in MST and e' is not by the cycle lemma, proving that G is a unique minimum spanning tree.
+
+proof by contradiction
+Assume G does not have a unique MST.
+
+T and T'
+same number of edges, but edges not the same
+assume edge e' in T' but not in T
+add e' to T, you get a cycle C
+if e is the most expensive edge in C, it doesn't belong in MST
+By cycle property, e does not belong to any spanning tree
+But e belongs to either T or T', and thus we get a contradiction.
+
+
+Problem 10:
+Section b)
+
+If a new edge is added to G, this means that there are two different paths connecting two nodes v and w. Therefore, this results in a cycle. Thus, by the cycle lemma, for the new edge to be added to the Minimum cost spanning tree T, the cost of the new edge must be less than the cost of every edge of the actual path from v to w in the MST.
+
+AddNewEdge(T, e, c) //T is the MST, e is the new edge, c is the cost of the new edge
+	Find path from vertex v to w in MST T
+	Go through every edge in path (v, w) and compare to cost of e.
+	If (cost of e < edge in path (v, w))
+		return false //e belongs in an MST
+	endif
+	return true;
+
+b)
+
+AddNewEdge(T, e) //We know T is an MST and that we must add edge e to T.
+	Find path from vertex v to w in MST T
+	Go through every edge in path (v,w)
+	remove the highest costing edge in path
+	add e to T
+
+
+

@@ -1,0 +1,104 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 9}
+\date{04/28/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 9-2: Load Balancing}
+
+\subsection*{Part A}
+
+\begin{lem}
+$k$ is at most $2m$.
+\end{lem}
+\begin{proof}
+Proof by Contradiction: Let us assume case for when $k > 2m$. We consider the case for where we are about to assign task $i = 2m + 1$ on a machine. The load on each machine $L > \frac{2L*}{3}$. \\
+When you add the i'th job, you're adding a job with weight $w_i > \frac{L*}{3}$.\\
+Thus, when the job is assigned on a machine, the total load on machine $L > \frac{2L*}{3} +  \frac{L*}{3} > L*$. L* is the maximum load on a machine. Since the maximum load cannot be exceeded, we have a contradiction. This completes the proof. 
+
+\end{proof}
+
+\subsection*{Part B}
+
+The SORTEDBALANCE algorithm sorts the tasks based on the weights in decreasing order. For each task, it is allocated to the least loaded machine. We consider two cases.\\
+Case 1:  $0 \leq k \leq m$
+Since $k \leq m$, the algorithm allocates a task to each machine. Since we allocate based on sorted order, $L** = w_1$. For any task $i$ where $i\leq k$.
+\begin{equation}
+w_i \leq L**
+\end{equation}
+\begin{equation}
+L** \leq L
+\end{equation}
+\begin{equation}
+L** > \frac{L*}{3}
+\end{equation}
+
+Case 2: $m < k \leq 2m$
+When $k > m$, the algorithm allocates more than one task to at least one machine. Additionally, the maximum amount of tasks one can allocate to any machine is 2 tasks. If we allocate more than two tasks, the total weight allocated on the machine exceeds $L*$. Thus we can claim the following:
+\begin{equation}
+L** > \frac{2 L*}{3}
+\end{equation}
+
+
+\subsection*{Part C}
+From the class lectures, we know that the following two claims are true:
+\begin{equation}
+	w \leq L* 
+\end{equation}
+\begin{equation}
+	L \leq L* 
+\end{equation}
+When $i \leq k$, we can claim
+\begin{equation}
+	w_i > \frac{L*}{3}
+\end{equation}
+For $i > k$ we can claim
+\begin{equation}
+	w_i \leq \frac{L*}{3}
+\end{equation}
+
+Let's assume that all tasks up to $k$ have already been allocated to the machines. We are allocating task $i$ where $i > k$ to a machine. \\
+Case 1: $L = 0$\\
+\begin{equation}
+L+w_i = w
+\end{equation}
+By equation 8
+\begin{equation}
+w_i \leq \frac{L*}{3} 
+\end{equation}
+Case 2: $L > 0$\\
+By equations 6 and 10
+\begin{equation}
+L + w_i \leq L* + \frac{L*}{3}
+\end{equation}
+\begin{equation}
+L* + \frac{L*}{3} = \frac{4L*}{3}
+\end{equation}
+Thus,
+\begin{equation}
+L  \leq \frac{4L*}{3}
+\end{equation}
+\end{document}

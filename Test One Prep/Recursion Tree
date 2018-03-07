@@ -1,0 +1,134 @@
+Recursion Tree
+T(n) -> cn
+
+
+Level 0: 2^0 = 1
+Level 1: 2^1 + 2^0
+Level 2: 
+
+n = 5
+2 * n = 4
+4 * n = 3
+8 * n = 2
+16 * n = 1
+
+
+n = 3
+2 * n = 2
+4 * n = 1
+
+1 + 2 + 4 + 8 + 16
+
+1 * (2^5 - 1)
+
+(2^n - 1)
+
+
+T(1) = c
+
+T(n) = 2 T(n-1) + c
+T(n) = 2 (2 T(n-2) + c) + c
+T(n) = 2 (2 (2 T(n-3) + c) + c) + c
+T(n) = 2(2(2...(2 T(1) + c) + c) + ...) + c
+
+= 2^(n-1)c + 2^(n-2)c + 2^(n-3)c + ... + c = c(2^n - 1)
+
+
+T(n) = 2T(n/2) + cn
+T(1) = c
+
+T(n) = 2T(n/2) + cn
+= 2 (2 T(n/4) + c(n/2)) + cn
+= 2 (2 (2 T(n/8) + c(n/4)) + c(n/2)) + cn
+= 2^3*T(n/2^3)+ 2^2*c(n/2^2) + 2^1*c(n/2^1) + 2^0*c(n/2^0)
+2^log(n)T(1) + 2^(log(n)-1)*cn/2^(log(n)-1) + 2^(log(n)-2)*cn/2^(log(n)-2) + ... 2^(1)*cn/2 + cn
+
+cn + cn .... //log(n) terms
+
+cn * log(n)
+
+Claim: T(n) <= cn + cnlog(n) (for all n)
+
+Base Case:
+n = 1
+When n = 1
+T(1) <= c + clog(1) = c. This is true.
+
+Induction Hypothesis: Works for n = k . We will prove that it works for n = k+1.
+
+when n = k
+T(k) = ck + cklog(k)
+
+when n = k+1
+T(k+1) = 2T((k+1)/2) + c(k+1)
+T((k+1)/2) = c((k+1)/2) + c((k+1)/2)log((k+1)/2))
+2*(c((k+1)/2) + c((k+1)/2)log((k+1)/2))) + c(k+1)
+c(k+1) + c(k+1)log((k+1)/2) + c(k+1)
+c(k+1)log((k+1)/2) + 2c(k+1)
+(c(k+1)) * (log((k+1)/2) + 2)
+(c(k+1)) * (log(k+1) - log(2) + 2)
+(c(k+1)) * (log(k+1) + 1)
+c(k+1)(log(k+1)) + c(k+1)
+
+
+T(n) = 2^n - 1 for all n
+
+T(n) = 2T(n-1) + 1
+T(1) = 1
+
+Base Case:
+n = 1
+T(1) = 2^1 - 1 = 2 - 1= 1
+Thus, the base case is true.
+
+Induction Hypothesis: Works for n = k. We will prove it works for n = k+1
+
+n = k+1
+T(k+1) = 2T(k) + 1
+T(k+1) = 2(2^k - 1) + 1
+T(k+1) = 2^(k+1) - 2 + 1
+T(k+1) = 2^(k+1) - 1
+This proves true for all values k.
+
+Claim:
+sum of first n integers = (n(n+1)) / 2
+
+Base Case
+n = 1
+1(1+1)/2 = 2/2 = 1
+The base case holds true
+
+Induction hypothesis: Suppose the claim works for n = k. We will prove it works for n = k+1
+
+n = k+1
+sum of first k+1 integers:
+1 + 2 + ... + k + k+1
+= (sum of first k integers) + k+1
+= (k(k+1))/2 + k+1
+= (k(k+1))/2 + 2*(k+1)/2
+= (k(k+1) + 2(k+1))/2
+= (k+1)(k+2) / 2
+Thus, the induction hypothesis holds true
+
+Use the Principle of Mathematical Induction to verify that, for n any positive integer, 6^n − 1 is divisible by 5 
+
+Base case: 
+n = 1
+(6^1) - 1 = 5
+5 is divisible by 5
+Thus, the base case holds true
+
+Induction hypothesis: Suppose the claim works for n = l, We will prove it works for n = k+1
+
+n = k+1
+(6^(k+1))-1
+= 6^k * 6 - 1
+= 6^k * 6 - 6 + 5
+= 6(6^k-1 * 1 - 1) + 5
+= 6(6^k-1 - 1) + 5
+both terms are divisible by 5 so the entire value is divisible by 5
+
+
+
+
+

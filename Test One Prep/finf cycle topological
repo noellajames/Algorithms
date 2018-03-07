@@ -1,0 +1,9 @@
+To compute a topological ordering of G:
+Find a node v with no incoming edges and order it first 
+If no such node v 
+	//no DAG, contains a cycle
+	findcycleDFS
+Endif
+Delete v from G
+Recursively compute a topological ordering of G-{v} and append this order after v 
+

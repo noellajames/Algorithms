@@ -1,0 +1,60 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf810
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww18600\viewh12640\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs36 \cf0 OCD: You have to store L gallons of oil where L is a natural number. You own a factory that can make as many 1-gallon, 2-gallon, 2^2-gallon, \'85, 2^1000-galloncontainers as you would like. However, you would like to store the L gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full. Consider the following algorithm:\
+\
+Input: L\
+Result: Smallest number of containers you can fill L gallons of oil in, while ensuring that no container has any space left and the list the capacities of these containers.\
+\
+L\'92 -= L\
+count = 0; \
+Arr = []\
+while (L\'92 is greater than 0) \{\
+	A = max of 2^i set less than L\'92 where i is between 1 to 1000\
+	count ++;\
+	append the A to the array\
+	update L with L - a;\
+Output: count and the list of the capacities\
+\
+Lemma 2.1: Given the previous algorithm, the result will always be the smallest number of containers you can fill L gallons of oil in.\
+\
+Proof by Induction: : A natural number L, where L is greater than or equal to 1.\
+\
+Base Case: L = 1\
+Given the algorithm, a 1 gallon container will be used. The base case olds true that the smallest number of containers you can fill L gallons of oil in since only one container is used.\
+\
+Induction Hypotheses: Given k gallons of oil, there exists a method to store the k gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full.\
+\
+Induction Step: For k+1 gallons of oil, we want to show that there also exists a method to store the k+1 gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full. \
+\
+It is possible to find such an i where i is between 0 to 1000 where 2^i  <= k+1.\
+Z = k+1 - 2^i\
+Z is greater than or equal to 0 and it is less than or equal to k\
+By Induction Hypotheses , there exists a method to store the Z gallons of oil in as few different containers as possible while ensuring that every container you store the oil in is full. Thus, we conclude that Lemma 2.1 is true.\
+\
+\
+Lemma 2.2: Given the previous algorithm, this algorithm finds the optimal solution.\
+\
+Assume there is an optimal solution O (theta). \
+\
+Proof by Induction: : A natural number L, where L is greater than or equal to 1, the solution returned by the previous algorithm is the same as O.\
+\
+Base Case: L = 1\
+The previous algorithm will therefore return 1 container of size 1-gallon\
+O will also return 1 container of size 1-gallon since that is the optimal solution.\
+\
+Induction Hypotheses: Given k gallons of oil, the previous algorithm and O will return the same count and sizes of containers to store the k gallons of oil.\
+\
+Induction Step: For k+1 gallons of oil, we want to show that the previous algorithm and O will return the same count and sizes of containers to store the k+1 gallons of oil.\
+\
+It is possible to find such an i where i is between 0 to 1000 where 2^i  <= k+1.\
+Z = k+1 - 2^i\
+Z is greater than or equal to 0 and it is less than or equal to k\
+Both O and the previous algorithm will choose the 2^i container because that is the maximum container that can be chosen given the rule that holds the most oil and contains no empty space.\
+Since Z is greater than or equal to 0 and it is less than or equal to k, both O and the previous algorithm will choose the same sequence of containers by the Induction Hypotheses.\
+Thus, we conclude that Lemma 2.2 is true.\
+}

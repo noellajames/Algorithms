@@ -1,0 +1,36 @@
+M families
+Family i has a(i) members
+There are N tables
+Table j can seat b(j) people
+
+		families		tables
+          a               1
+          b
+          c
+s 										t
+
+
+
+
+
+edge e - c_e f(e)
+
+forward edge exists if f(e) >= 0 and less than c_e
+capacity of forward edge is c_e - f(e)
+backward edge exists if 0 <f(e)< ce
+
+path from s to u is p1
+path from v to t is p2
+decrement flow on every edge by one
+
+algorithm to find downward critical edges
+iterate through all the edges to identify edges where flow = capacity
+Assume e = u,v is such an edge
+path from s to u is p1
+path from v to t is p2
+The path p from s to t is p1 to e to p2
+If path p has a cycle, which includes e, the the flow reduction is managed within the cycle
+Therefore, e is not a critical edge
+If path p is not a cycle, then we need to reduce the flow among the edges in the path
+This reduces the maximum flow
+Thus, e is a downward critical edge

@@ -1,0 +1,102 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 5}
+\date{03/17/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 5-2: Broken Keys}
+
+\subsection*{Recurrence Equation}
+
+The problem requires a algorithm to transform string1 to string2.  Lets represent string1 as X and string2 as Y.  X can be represent as a set of symbols $(X_1, X_2, \ldots X_m)$. Y can be represent as a set of symbols $(Y_1, Y_2, \ldots Y_n)$.  The problem indicates that the number of presses required to enter a character $x$ is $N[x]$.  The problem does not specify the number of times the delete key has to be pressed to delete a character from string1 (X).  We present the value as $\alpha$. \\\\
+In the derivation of the optimal solution there are 4 cases to be considered.\\
+\subsubsection*{Case 1}
+The last character in string X is not required for string Y and thus should be deleted.  The recurrence relation is\\
+$OPT(m,n) = \alpha + OPT(m-1,n)$\\
+\subsubsection*{Case 2}
+The last character in string Y  need to be entered.  The recurrence relation is\\
+$OPT(m,n) = N[Y_n] + OPT(m,n-1)$\\
+\subsubsection*{Case 3}
+The last character of X and Y are same and thus the mouse pointer can be shifted one place towards left. Thus, the recurrence relationship is\\
+$OPT(m,n) = OPT(m-1,n-1)$\\
+\subsubsection*{Case 4}
+The last character of X and Y are different and thus the last character in X needs to be deleted and the last character Y needs to be entered.  Thus, the recurrence relationship is\\
+$OPT(m,n) = \alpha + N[Y_n] + OPT(m-1,n-1)$\\\\
+\subsubsection*{Recurrence equation}
+The algorithm should chose the minimum value of these 4 options.  Thus, the final recurrence relationship is\\
+$OPT(m,n) = min[ \alpha + OPT(m-1,n) ,\quad   N[Y_n] + OPT(m,n-1) ,\quad OPT(m-1,n-1)  ,\quad  \alpha + N[Y_n] + OPT(m-1,n-1) ]$\\\\
+
+\subsection*{Algorithm}
+
+\begin{algorithm}
+\caption{MINIMUM KEYSTROKES}\label{Find the minimum number of keystrokes needed to change string1 to string2}
+\begin{algorithmic}[1]
+\Procedure{MIN-KEYSTROKES}{$X, Y$} \Comment{ $X = \{X_1, X_2,\ldots,X_m\}, Y = \{Y_1, Y_2,\ldots, Y_n\}$, Array $N[x] =$ number of times a character x is pressed for it to be typed, $\alpha = $ number of times delete key has to be pressed to delete a character}
+        \State Array $A[0\ldots m, 0 \ldots n]$
+        \State Initialize $A[i, 0]  = i\alpha$ for each $i$
+        \For{$j = 1 \ldots n$}
+         	\State $A[0,j] = A[0,j-1] + N[x_j]$
+        \EndFor
+	\For{$j = 1\ldots n$}
+		\For{$i = 1\ldots m$}
+			\State $A[i,j] = min[\alpha + A(i-1,j)  , \quad  N[y_j] + A(i,j-1) , \quad  A(i-1,j-1), \quad \alpha + N[y_j] +  A(i-1,j-1) ]$ \Comment{Recurrence relationship as seen above}
+		\EndFor
+	\EndFor
+	\State \Return $A[m,n]$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Complexity}
+String1 = X = $\{X_1, X_2, \ldots, X_m\}$ has $m$ characters. String2 = Y = $\{Y_1, Y_2, \ldots, Y_n\}$ has $n$ characters. The outer for loop runs $n$ times and the inner loop runs $m$ times. The complexity of the recurrence statement is $O(1)$. Therefore, the total complexity is $O(nm)$.
+
+\subsection*{Correctness}
+\begin{lem}
+The algorithm $MINIMUM KEYSTROKES(X, Y)$ correctly computes the minimum number of keystrokes needed to convert X to Y.
+\end{lem}
+\begin{proof}
+We will prove this by induction on $i + j$.
+\subsubsection*{Base Case:}
+When $i+j = 0$, we have $i=j=0$, and we don't have to convert any strings. The function returns 0, which is correct since 0 keystrokes are needed to convert X to Y. Indeed $OPT(0,0) = 0.$
+\subsubsection*{Induction Hypothesis:}
+Now consider arbitrary values of $i$ and $j$, and suppose the statement is true for all pairs $(i',j')$ with $i' + j' < i + j$. The four cases that exist are \\
+1. We delete $X_{i}$. \\
+2. We type $Y_j$. \\ 
+3. $X_{i}$ is the same as $Y_j$ and nothing needs to be done.\\
+4. We delete $X_{i}$ and type $Y_j$.\\
+We choose the minimum of the four options. Thus,
+\begin{equation*}
+\begin{split}
+ A[i,j] &= min[\alpha + A(i-1,j)  , \quad  N[y_j] + A(i,j-1) , \quad  A(i-1,j-1), \quad \alpha + N[y_j] +  A(i-1,j-1) ]\\
+ &= min [ \alpha + OPT(i-1,j),\,  N[y_j] + OPT(i,j-1), \,  OPT(i-1,j-1),\, \alpha + N[y_j] +  OPT(i-1,j-1) ]\\
+ &= OPT(i,j)
+\end{split} 
+\end{equation*}
+Thus, this completes the proof.\\
+\end{proof}
+
+\end{document}

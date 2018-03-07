@@ -1,0 +1,22 @@
+O(n+m)
+
+DFS(u)
+ 	Mark u as "Explored" and add u to R
+	For each edge (u,v) incident to u
+		If v is not marked "Explored" then
+			Add (u,v) to tree T
+			Recursively invoke DFS(v)
+		Endif
+	Endfor
+
+FindCycleDFS(G)
+	Explored[|V|];
+	T = {}
+	Pick node u from G
+	DFS(u) // O(n+m)
+	Find an edge (s,t) that is in G and not in T //O(m)
+	If no edge exists // no cycle
+		return false
+	Endif
+	Find a path from s to t in T //sucha  path exists because T connects all the nodes  // O(m)
+	The cycle is the path from s to t in T and the edge (s,t)

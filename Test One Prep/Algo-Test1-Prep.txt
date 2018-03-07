@@ -1,0 +1,44 @@
+Section 1:
+	Algorithm Complexity
+	Section 2.2 
+	Solved Exercise 1
+	Exercise 3 and 4 
+	Homework - Problem 1
+
+Section 2:
+	Basic Graph Theory
+	Complete Chapter 3
+	In 3.1 you can skip the type of graphs. 
+	In 3.2 understand the tree that is formed as part of BFS and DFS (it is needed to solve issues related to cycles.  a back node => a cycle)
+	In 3.2 understand the portion related to connectivity for undirected graph. 
+	In 3.3 understand how BFS and DFS can be implemented (the chapter also focuses on how queue / stack can be implemented. you can skip that)
+	**Cover section 3.4 (Bipartite graphs.)  This was used in the Pedantic Sally problem and has uses.
+	**Section 3.5 -> understand strong connectivity.  How does one verify if a directed graph is strongly connected. 
+	**Section 3.6 -> Topological sorting.  It is in the list of items to be taught if you look at the schedule and your TA covered it.  Thus the teacher might ask you questions on it
+	Solved Exercise 1 and 2
+	Homework -> HW1 -> Problem 2
+	Chapter 3: Ex 1, 2, 3 5, 6 , 7 9, 10
+**finish chapter 3 and do the questions**
+Section 3:
+	Greedy Algorithms - Interval Scheduling 
+	Sections 4.1 , 4.2 
+	Solved Exercise 1, 2
+	HW -> HW2 -> Problem 2
+	Chapter 4: Ex 3, 4, 5, 6, (if you have time, 13 and 15)
+
+Section 4:
+	Shortest Path and MST
+	Section 4.4, 4.5, 4.6 4.7 (Cut and Cycle lemma's are important concepts )
+	Solved - Exercise 3
+	HW - HW2 - Probem 1 (Pedantic Sally)
+	HW - HW3 - Problem 1, 2 
+	Chp4: Ex 1, 2 , 8 , 9, 10 , 11 , 18 , 20
+
+Section 5:
+	Divide and Conquer
+	5.1 , 5.2, 5.3 (though she did not teach this. it might come in exam) 5.4 , 5.5 
+
+	HW 3 - P3 (Median)
+	Solved Excercise 1, 
+	Problems, 1,2,3,4
+

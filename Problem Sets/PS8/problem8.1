@@ -1,0 +1,21 @@
+Alphabet Set E = {a,b}
+n = 3
+p(w) will halt if the input is aaa
+p'(w) return yes if p(w) halts and returns false if p(w) does not halt
+
+if (p(w) halts)
+	return true
+else
+	return false
+
+assume we know the input w' from which p will halt
+
+Let w' be the string in which p halts
+
+p'(w) {
+	if (w == w') {
+		return true;
+	} else {
+		return false;
+	}
+}

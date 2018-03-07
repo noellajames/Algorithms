@@ -1,0 +1,162 @@
+% Notes from Class 6
+
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\section{Minimum Spanning Tree}
+
+\textbf{Input:} Connected, undirected, weighted $G=(V,E)$\\
+\textbf{Output:} A tree on edges that minimizes sum of weights while spanning all vertices
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,0) {0};
+  \node (n2) at (4,4) {1};
+  \node (n3) at (4, -4)  {2};
+  \node (n4) at (8,0)  {3};
+
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$10$};
+  \draw  (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+  \draw   [very thick, green]  (n2) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+  \draw   [very thick, green]  (n3) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$4$};
+  \draw   [very thick, green]  (n3) -- (n1) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$7$};  
+
+\end{tikzpicture}\\\\
+
+
+\subsection{Cycle Property}
+\begin{lem}
+Let $C$ be a cycle in $G$. Let $e \in C$ be a heaviest edge on $C$.  There, there is always an MST that does not contain $e$.
+\end{lem}
+
+\begin{proof}
+
+Let $T$ be an MST where $e \in T$.\\
+Consider $T - \{\,e\,\}$, where $e = (u,v)$\\
+Let $A = \{ w \in V | w $ is reachable from $ u \in T - \{e\} \}$\\
+There must be an edge $e'$ on $C$ that connected $A$ to $V-A$.\\
+Consider $T' \triangleq T - \{ e \} \bigcup \{ e' \}$\\
+\textsl{Claim 1:} Weight of $T'$ only smaller or equal to weight of $T$ because $e$ is the heaviest edge.\\
+\textsl{Claim 2:} $T'$ spans all vertices.
+
+\end{proof}
+
+
+\section{Kruskal's Algorithm}
+
+\begin{algorithm}
+\caption{Kruskal's Algorithm}\label{Kruskal's Algorithm to find MST}
+\begin{algorithmic}[1]
+\Procedure{Kruskal's Algorithm}{$G$}\Comment{$G(V,E)$ weighted graph w/non-negative weights}
+	\State $T \gets \{\}$
+	\State Sort all edges according to weight. $e_1\, \leq e_2\, \leq \cdots \, \leq e_m$	
+	\ForAll{ edges $e=(u,v)$ in order from to light to heavy}
+		\If{$u$ not connected to $v$ }
+			\State $T \gets T \bigcup \{e\}$
+		\EndIf
+	\EndFor
+	\State \textbf{return} $T$ for $G$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{note}
+You must pass on connected components, or else you will make a cycle.
+\end{note}
+
+\subsection{Complexity}
+$n-1 \leq m \leq n^2$\\
+$m = |E| \quad n = |V|$\\
+$O (m \log n)$  
+\begin{note}
+The actual complexity is $O(m \log m)$ but it is aways better to write $\log n$ if it is a connected graph.
+\end{note}
+
+\section{Union-Find Data Structure}
+Maintain a collection of disjoint sets. Ex: connected components of a graph.\\
+Each disjoint set is represented by one of its members.\\
+
+\begin{itemize}
+	\item \textbf{Make-Set($X$):} Creates a new set with element $X$. $O(1)$
+	\item \textbf{Find-Set($X$):} Returns the representative of the set $X$ belongs to. $O(\log n)$. depth of $X$ in its tree.
+	\item \textbf{Union($X,Y$):} Merges the set represented by $X$ and $Y$. $O(1)$
+\end{itemize}
+
+Represent each set by a tree.  Root = representative.  Each element points to its parent in the tree.
+
+Union by size: Whenever we union two sets, we make the root of the smaller tree, the child of the root of the larger tree.
+
+\section{MST-KRUSKAL}
+Implementation of Kruskal using Union-Find is described in Algorithm 2.
+
+\begin{algorithm}
+\caption{Kruskal's Algorithm}\label{Kruskal's Algorithm using Union-Find}
+\begin{algorithmic}[1]
+\Procedure{MST-KRUSKAL}{$G$}\Comment{$G(V,E)$ weighted graph w/non-negative weights}
+	\State $T \gets \{\}$
+	\ForAll{$v \in V$}
+		\State Make-Set($v$)
+	\EndFor
+	\State Sort all edges according to weight. $e_1\, \leq e_2\, \leq \cdots \, \leq e_m$	
+	\ForAll{ edges $e=(u,v) \in E$ in order from to light to heavy}
+		\If{Find-Set($u$) \ne Find-Set($v$) }
+			\State $T \gets T \bigcup \{e\}$
+			\State Union($u$,$v$)
+		\EndIf
+	\EndFor
+	\State \textbf{return} $T$ for $G$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\section{Clustering}
+
+\textbf{Input:} Point $P_1$ - $P_n$\\
+\textbf{Distance Function:}$d (.\,,.)$\\
+$\forall i\,,j$\\
+$ d(P_i,P_j) = 0 \leftrightarrow i = j $\\
+$ d(P_i, P_j) = d(P_j, P_i)$\\
+$ d(P_i, P_j) \ge 0$\\
+\textbf{Output:} Partition the points to $K$ sets where $K$ is a natural number.\\
+So the spacing between clusters i s max.  Spacing = min distance between points in different clusters.
+
+Ex: Netflix "you may also like"
+
+Algorithm: Run Kruskal on graph 
+$\{p_1\,, p_2\,, \ldots \,,p_n\}$ all edges $(p_i,p_j)$ each weighted with $d(p_i,p_j)$
+
+Stop when you have reached $K$ connected components.
+
+Let $D$ be the spacing Kruskal achieved. $D$ = weight of the $(k-1)^{th}$ heaviest edge in MST.\\
+$\Rightarrow$ edges inside component are of weight $\leq D$
+
+\end{document}

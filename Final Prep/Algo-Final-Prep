@@ -1,0 +1,66 @@
+Given a Graph G = (V,E), does it have a clique of size at least k?
+
+S is a subset of V such that for every u,v in S, there is an edge e = (u,v) in E.
+
+If given a set S of size k, can we verify in polynomial time that the vertices in S form a clique?
+
+Given G, S and k, write a polynomial time algorithm to verify that S is a clique.
+
+For each vertex, check to see if there are shared edges with other vertices in set S. 
+If there is no shared edges, return false
+Continue until done iterating through all the vertices
+
+Algorithm:
+For (each vertex u in S)
+	For (each vertex v != u in S) 
+		if e = (u,v) is not in E
+			return false
+		endif
+	endfor
+endfor
+return true;
+
+run time: O(V^2) is polynomial time. thus, we can verify if there is a clique in polynomial time
+
+independent set , <=p clique
+
+clique <=p independent set
+
+proof: 
+independent set <=p clique
+
+reduction:
+
+Lets create a complement graph G' of G. The complement graph G' will consist of the same number of vertices in G, however, where there is an edge in G, there will not be an edge in G'. Similarly, where there isn't an edge in G', there is an edge in G.
+
+The complexity of the conversion is O(V + E)
+
+assuming there's a black box for clique that can given an input graph G, and number k, it returns true if the graph has a clique of size at least k and false otherwise. 
+
+To answer the question whether Graph G has an independent set of at least size k, transform it using the reduction algorithm to a clique. Then ask the black box if the clique has a size of at least k.
+
+how to prove that the given problem is NP hard
+First, prove that if a solution exists, then the solution can be verified in polynomial time. Give an algorithm and the complexity. 
+Next, use a known NP hard problem and show that it is polynomially computable to the problem.
+
+known NP hard problem <=p given problem.
+
+Create a reduction to transform the known np hard problem to the given problem. Prove that the reduction is polynomial time.
+
+Assuming that a blackbox exists for the given problem, we prove how the NP hard problem can be answered using the reduction and asking the blackbox for the solution.
+
+
+Proving proof
+
+Clique <=p Independent Set
+
+reduction:
+
+Lets create a complement graph G' of G. The complement graph G' will consist of the same number of vertices in G, however, where there is an edge in G, there will not be an edge in G'. Similarly, where there isn't an edge in G', there is an edge in G.
+
+The complexity of the conversion is O(V + E)
+
+assuming there's a black box for independent set that can given an input graph G, and number k, it returns true if the graph has a independent set of size at least k and false otherwise. 
+
+To answer the question whether Graph G has an clique of at least size k, transform it using the reduction algorithm to an independent set. Then ask the black box if the independent set has a size of at least k.
+

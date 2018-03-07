@@ -1,0 +1,273 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usegdlibrary{trees}
+\begin{document}
+
+
+
+%Notes for class 2 of algorithm class
+
+\section{Introduction}
+
+How do you solve Rubik's cube\\
+You use a graph\\
+Graph Vertices = Configurations of the cube\\
+Graph Edges = transitions between configurations.\\
+The graph is undirected as it is possible to go back and forth between various configurations.\\
+
+You would use a BFS search to find the solution to a cube as it is feasible to find solution to the puzzle is less than 20 rotations. Though, the number is possible configuration is $43,252,003,274,469,356,004$ the shortest path to the solved state is $\leq 20$ 
+
+\section{Representation of graphs}
+
+Graphs can be represented either as adjacency matrix or as adjacency lists
+
+\subsection{Adjacency matrix}
+
+A graph can be represented as a two dimensional array with the row and columns representing the vertexes and each element $[u,v]$ representing the presence of an edge from $u$ to $v$.\\
+For an undirected graph, the value at index $[u,v]$ would be same as the value at $[v,u]$.\\
+
+An example representation is shown below.
+\begin{equation*}
+	\begin{bmatrix}
+		1 & 0 & 0\\
+		0 & 1 & 1\\
+		1 & 1 & 0 
+	\end{bmatrix}
+\end{equation*}
+	
+An adjacency matrix representation support the check if there is an edge from $u$ to $v$ in constant time.  However, to compute the number of degree of a vertex or to find all the edges for a vertex requires $O(n)$ time. Additionally, the space requirement for this representation is $O(n^2)$.\\
+
+
+
+
+\subsection{Adjacency list}
+
+In the adjacency list representation, the vertex's are represented as an array. Each element of the array contains a list of vertex's for which an edge exists from the vertex under-consideration. Thus index of $u$ contains the list of vertex's for which an edge exists from $u$.
+
+\begin{equation*}
+	\begin{bmatrix}
+		0\\
+		1\\
+		2\\
+		3
+	\end{bmatrix}
+	\begin{matrix}
+		[1 \quad 2]\\
+		[  ]\\
+		[1 \quad 3]\\
+		[0 \quad 1 \quad 2]
+	\end{matrix}
+\end{equation*}
+
+An example representation of directed graph based on adjacency list is shown above. Vertex $V_0$ has edges to $V_1$ and  $V_2$.  Whereas Vertex $V_1$ does not have edges to any other node.  The vertex $V_3$ has edges to all the other three edges.
+
+The overall storage requirement for adjacency list representation is $O(V + E)$.  The size of the array is $O(V)$ and the count of all the edges is $O(E)$.  Thus, the overall storage requirement is $O(V+E)$.
+
+\section{Search}
+
+The search on a graph can be defined in two ways
+
+\subsection{vertices reachable from $s$}
+
+Input:\\
+ 		$Graph G = (V,E)$ \\
+		$Vertex\; s \in V$\\
+\\
+Output:\\
+List of vertexes reachable from $s$\\
+
+
+\subsection{path from $s$ to $t$}
+Input:\\
+ 		$Graph G = (V,E)$ \\
+		$Vertex\; s, t \in V$\\
+		$where, s\leftarrow solved\;configuration, t\leftarrow initial\;configuration$
+\\
+Output:\\
+Is there a patch from $s$ to $t$\\
+
+\subsection{Generic Search Algorithm}
+
+The basic search algorithm is shown in Algorithm 1.\\
+
+\begin{algorithm}
+\caption{Generic Search Algorithm}\label{A generic search algorithm}
+\begin{algorithmic}[1]
+\Procedure{GenericSearch}{$G(V,E),s$}\Comment{$s$ is the start vertex}
+	\State $S\gets \{s\}$\Comment{Initialize $S$ with the start vertex $s$}
+	\Repeat
+		\State pick an edge $(x,y) \in E\,,where\; x\in S\,,y\notin S$
+		\State $S\gets S\bigcup \{y\}$
+	\Until{there are no more edges as above}
+	\State \textbf{return} S\Comment{$S$ has list of all the vertexes reachable from $s$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+You can use an array "mark" to mark vertices that are in $S$. This will allow us to find in $O(1)$ time whether a vertex is in $S$.  A modified version of the algorithm with the "mark" array is shown below. This is shown in Algorithm 2.\\
+
+\begin{algorithm}
+\caption{Generic Search Algorithm with marking}\label{A generic search algorithm}
+\begin{algorithmic}[1]
+\Procedure{GenericSearch}{$G(V,E),s$}\Comment{$s$ is the start vertex}
+	\State initialize array $mark$ of size $|V|$ with 0\Comment{complexity $O(V)$}
+	\State $S\gets \{s\}$\Comment{Initialize $S$ with the start vertex $s$}
+	\State $mark[s] \gets 1$
+	\Repeat
+		\State pick an edge $(x,y) \in E\,,where\; x\in S\,,y\notin S$
+		\State $S\gets S\bigcup \{y\}$
+	\Until{there are no more edges as above}
+	\State \textbf{return} S\Comment{$S$ has list of all the vertexes reachable from $s$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\newtheorem{thm}{Theorem}
+\begin{thm}
+Every vertex that is added to $S$ is reachable from $s$.
+\end{thm}
+\begin{proof}
+We prove this by induction on the number of iterations.\\
+\textbf{Base:}\\
+ Assertion $S = \{s\}$\\
+$S$ is reachable from $s$.\\
+\textbf{Induction Hypotheses:}\\ 
+True for $i$ iterations.\\
+\textbf{Induction Step:}\\
+Let us prove for iteration $i+1$.
+Pick edge $(x,y \in E, x\in S\,,y\notin S)$.\\
+add $y$.\\
+We claim that $y$ is reachable from $s$.\\
+\\
+$x\in S$, so $x$ got added to $S$ before the $i+1$ iteration.\\
+By induction hypotheses, $x$ is reachable from $s$.\\
+Since $(x,y) \in E$, $y$ is reachable from $s$.\\
+$s \rightsquigarrow x \rightsquigarrow y$
+
+\end{proof}
+
+
+\subsection{Complexity}
+Note that there are at-most $|E|$ iterations since an edge $(x,y)$ never gets picked twice. However, the array initialization of the "mark"  takes $O(|V|)$.  Thus the complexity of the graph search algorithm is $O(|V|+|E|)$.
+
+\subsection{Example}
+
+Consider the graph shown below:\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (1,5)  {0};
+  \node (n2) at (5,9)  {1};
+  \node (n3) at (5,5)  {2};
+  \node (n4) at (5,1)  {3};
+  \node (n5) at (9,5)  {4};
+  \node (n6) at (1,1) {5};
+
+
+  \foreach \from/\to in {n1/n4,n5/n1,n1/n2,n2/n5,n2/n3,n3/n4}
+    \draw (\from) -- (\to);
+
+\end{tikzpicture}
+
+Assuming $s=0$, the set $S=\{0,1,2,3,4\}$, with vertex $5$ not reachable from vertex $0$.
+
+\section{Connected Components}
+
+\textbf{Connected Component:} A connected component is a set $S$ of vertexes of graph $G=(V,E)$ such that for every vertexes $x\in S\,,y\in S\;$ there exists a path from $x$ to $y$.\\
+
+The term connected component is used for undirected graphs. The equivalent term for directed graph is strongly connected.
+
+The connected components for a graph $G=(V,E)$ can be found by repeatedly applying the graph search algorithm.  The algorithm $3$ can be used to find the connected components of a graph $G$.  A more detailed algorithm is provided as part of algorithm $4$
+
+\begin{algorithm}
+\caption{Connected Components}\label{A algorithm to find the connected components of a graph $G$}
+\begin{algorithmic}[1]
+\Procedure{ConnectedComponents}{$G(V,E)$}\Comment{$G$ is the input graph}
+	\Repeat
+		\State pick a vertex $s \in V$\Comment{$v$ is not part of any connected component}
+		\State invoke $GraphSearch(G,s)$ to find connected component for $s$.
+		\State remove component from Graph $G$
+	\Until{$G$ is empty}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Connected Components - Detailed}\label{A algorithm to find the connected components of a graph $G$}
+\begin{algorithmic}[1]
+\Procedure{ConnectedComponents}{$G(V,E)$}\Comment{$G$ is the input graph}
+	\State initialize array $connected$ of size $|V|$ with 0\Comment{complexity $O(V)$}
+	\State $S'\gets \phi$\Comment{Initialize $S'$ as an empty set.}
+	\Repeat
+		\State pick a vertex $v$ from $connected$ where $connected[v] = 0$.\Comment{$v$ is not part of any connected component}
+		\State $connected[v] \gets 1$
+		\State $T\gets GraphSearch(G,v)$
+		\ForAll{$t \in T$}
+			\State $connected[t] \gets 1$
+		\EndFor
+		\State $S'\gets S'\bigcup T$
+	\Until{all elements of $connected$ is set to $1$}
+	\State \textbf{return} $S'$\Comment{$S'$ is a set of all connected components of $G$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Complexity}
+
+The algorithmic complexity of finding all connected graphs is $O(|V| + |E|)$.  I will provide the proof later.
+
+\section{Breath First Search : BFS}
+
+A Breath First Search (BFS) is a graph search algorithm such that for every vertex reachable from $s$, the search finds it in the smallest \# of steps.
+
+The BFS algorithm is detailed in Algorithm 5.  The output is $L_0\,,L_1\,,L_2\,,\dots L_n$ where $L_i\;=\;$vertices reachable from$s$ in $i$ steps.
+
+\begin{algorithm}
+\caption{Breath First Search}\label{Breath first search for graph $G$}
+\begin{algorithmic}[1]
+\Procedure{BFS}{$G(V,E),s$}\Comment{$G(V,E)$ is the input graph, $s\in V$}
+	\State initialize array $mark$ of size $|V|$ with 0\Comment{complexity $O(|V|)$}
+	\State $L_0 \gets \{s\}$
+	\State $mark[s] \gets 1$
+	\State $i \gets 1$
+	\Repeat
+		\State add vertex $u$ to $L_i$ for which $mark[u] = 0$
+		\State $mark[u] \gets 1$ 
+		\State $i \gets i+1$
+	\Until{ there is no vertex $v$ for which $mark[v] = 0$}\Comment{complexity $O(|E|)$}
+\EndProcedure\Comment{total complexity $O(|V|+|E|$}
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Example}
+
+An example of running the BFS search on the graph with start vertex $0$.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (1,5) [label=left:$L_0$] {0};
+  \node (n2) at (5,9) [label=$L_1$] {1};
+  \node (n3) at (5,1) [label=below:$L_1$] {2};
+  \node (n4) at (9,5) [label=right:$L_2$] {3};
+
+  \foreach \from/\to in {n1/n2,n1/n3,n3/n2,n2/n4,n4/n3}
+    \draw (\from) edge[->]  (\to);
+ 
+\end{tikzpicture}
+
+\end{document}
+
+
+
+

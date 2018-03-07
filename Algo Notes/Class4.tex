@@ -1,0 +1,199 @@
+% Notes from Class 4
+
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\section{Dijkstra's Algorithm}
+
+Dijkstra's Algorithm is another example of greedy algorithms. \\\\
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n3) [right=of n1]  {2};
+  \node (n2) [above=of n3] {1};
+  \node (n4) [below=of n3]  {3};
+  \node (n5) [right=of n3]  {4};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  [->] (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+  \draw  [->] (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+  \draw  [->] (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+  
+  \draw  [<->] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+
+  \draw  [->] (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+  \draw  [->] (n2) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+  \draw  [->] (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+
+  \draw  [<->] (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+ 
+\end{tikzpicture}\\\\
+
+\textbf{\textit{Input :}}
+Graph $G=(V,E)$ weighted w/non-negative weights.  $s \in V$ ($s$ is a vector in $G$).
+
+\textbf{\textit{Output :}}
+$\forall v \in V$ length of the shortest path from $s$ to $v$ ($\forall v $ in $V$)
+
+\subsection{Algorithm}
+
+Maintain $S \subseteq V$ : vertices for which we already have found shortest paths.
+\textsl{Convention:}  If $(u,v) \notin E$ i.e its not an edge then $w(u,v) = \infty$
+
+\begin{algorithm}
+\caption{Dijkstra's Algorithm}\label{Dijkstra's Algorithm to find the shortest paths}
+\begin{algorithmic}[1]
+\Procedure{Dijkstra's Algorithm}{$G,s$}\Comment{$G(V,E)$ weighted graph w/non-negative weights, $s \in V,\; s$ is a vertex in $V$}
+	\State $S \gets \{ s \}$\Comment{a set containing only s}
+	\State $d(S) \gets 0$
+	\Repeat
+		\State Pick $v \in V - S$ that minimizes $min\,d(u) + w(u,v)$\Comment{$d \rightarrow $ distance, $w \rightarrow $ weight}
+		\State $S \gets S \, \bigcup \, \{ v \}$\Comment{add $v$ to $S$}
+		\State $d(v) \gets min\,d(u) + w(u,v)$
+	\Until {There are no more vertices that can be considered.}
+	\State \textbf{return} $\forall v \in V$ length of the shortest path from $s$ to $v$ ($\forall v $ in $V$).
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Correctness}
+
+\begin{lem}
+Every time a vertex $v \in V$ is added to $S$. $d(v)$ is the length of the shortest path from $s$ to $v$.
+\end{lem}
+
+\begin{proof} By Induction\\
+\textbf{Base Case:} $S = \{ s \} \quad d(s) = 0$, indeed $0$ is the length of the shortest path $s  \rightsquigarrow s$\\
+\textbf{Induction Hypotheses:} Lemma is $true$ for certain $s$.\\
+\textbf{Induction Step:} We'll prove that the lemma is still $true$ after we add $v$ to $S$.\\
+Let $u \in S$ such that $d(u) + w(u,v)$ is minimum.\\
+There exists  a path $s  \rightsquigarrow v$ of length $d(u) + w(u,v)$ : the shortest path from $s$ to $u$, then the edge $(u,v)$\\
+Assume as a way of contradiction that there is a path  $s  \rightsquigarrow v$ of length smaller the $d(u) + w(u,v)$. \\
+
+$s  \in S \rightsquigarrow v \notin S$ \\
+On path from $s$ to $v$ there much be an edge $(u',v') \in E$ where $u' \in S, v' \in S\;  \Rightarrow d(u') + w(u',v') < d(u) + w(u,v)$\\
+$d(u') + w(u',v')$ is part of path that is shorter than $s  \rightsquigarrow u \rightarrow v$\\
+So the algorithm would have picked $d(u') + w(u',v')$ or better and not $d(u) + w(u,v)$.\\
+This is a contradiction.
+\end{proof}
+
+\begin{note}
+If there are negative weights, $d(u') + w(u',v') < d(u) + w(u,v)$ does not hold.
+\end{note}
+
+\section{Priority Queue}
+Maintain a set of elements, each has a value "key".\\
+
+\begin{itemize}
+	\item \textbf{Insert($Q\,,X$):} Insert $X$ with value key($X$)
+	\item \textbf{Min($Q$):} Report if $Q \neq 0$ or $Q = 0$
+	\item \textbf{Extract-Min($Q$):} Returns min and deletes it from $Q$
+	\item \textbf{Decrease-Key($Q\,,X\,,k$):} Changes Key($X$) to $k$ if $k < $key($X$)
+\end{itemize}
+
+\section{Dijkstra's Algorithm Implementation}
+$Q$ will maintain vertices, specifically $V - S$ (set minus)\\
+key($v$) = min $d(u) + w(u,v)$ where $u \in S$\\\\
+
+\begin{algorithm}
+\caption{Dijkstra's Algorithm Implementation using Priority Queue}\label{Dijkstra's Algorithm to find the shortest paths}
+\begin{algorithmic}[1]
+\Procedure{Dijkstra's Algorithm Implementation}{$G,s$}\Comment{$G = V, E$  size: $m = |E| \; n = |V|$}
+	\State $\forall v \in V\,, d(v) \gets \infty$
+	\State $d(s) \gets 0$
+	\State Insert all vertices to Q.\Comment{$O(n \log n$)}
+	\While{$Q \neq 0$}	
+		\State $u \gets $ Extract-min($Q$)\Comment{$O(n \log n)$}
+		\ForAll{ neighbor $v$ of $u\,,\quad, v \in Q$}
+			\State Decrease-Key ($Q\,,v\,,d(u)+w(u,v)$) 
+		\EndFor \Comment{$O(m \log n)$}
+	\EndWhile
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{tikzpicture}
+  [scale=.4,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) {0};
+  \node (n3) [right=of n1]  {2};
+  \node (n2) [above=of n3] {1};
+  \node (n4) [below=of n3]  {3};
+  \node (n5) [right=of n3]  {4};
+
+ % \foreach \from/\to in {n1/n2,n1/n4,n1/n3,n2/n3,n3/n2,n4/n3,n2/n5,n3/n5,n4/n5,n5/n4}
+ %   \draw (\from) edge[->]  (\to);
+ 
+  \draw  [->] (n1) -- (n2) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+  \draw  [->] (n1) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+  \draw  [->] (n1) -- (n4) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$8$};
+  
+  \draw  [<->] (n2) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+
+  \draw  [->] (n4) -- (n3) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+  \draw  [->] (n2) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$3$};
+  \draw  [->] (n3) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$1$};
+
+  \draw  [<->] (n4) -- (n5) node [above, draw=none, fill=none, align=center, midway, text width=.4mm]{$2$};
+ 
+\end{tikzpicture}\\\\
+
+\begin{equation*}
+	\begin{bmatrix}
+		0 & 1 & 2 & 3 & 4\\
+		0 & \infty & \infty & \infty & \infty\\
+		- & 2 & 8  & 8 & \infty\\
+		- & - & 3  & -  & 5\\	
+		- & - & -  & -  & 4\\
+		- & - & -  & 6  & -\\
+	\end{bmatrix}
+\end{equation*}
+
+Path: 0, 1, 2, 4, 3
+
+\begin{note}
+Always remember to add $d+w$
+\end{note}
+
+An implementation of priority queue is binary heap.  You can use an array to store all the values in a binary head, children "\ge" parent
+
+\begin{itemize}
+	\item \textbf{Insert($Q\,,X$):} $O (\log n)$
+	\item \textbf{Min($Q$):} $O (1)$
+	\item \textbf{Extract-Min($Q$):} $O (\log n)$
+	\item \textbf{Decrease-Key($Q\,,X\,,k$):} $O (\log n)$
+\end{itemize}
+
+\begin{note}
+Can sort with priority queues
+n inserts + n extract-mins has to take $\Omega (n \log n)$
+\end{note}
+
+\end{document}

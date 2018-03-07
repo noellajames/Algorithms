@@ -1,0 +1,105 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 4}
+\date{03/04/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 4-1: Longest Path}
+
+\subsection*{Solution}
+We are given a DAG $G$. First, perform a topological sort on $G$. The topological sort orders the nodes from 1 to $n$ where 1 is leftmost node and $n$ is rightmost node. \\
+If vertex $u$ does not have any incident edges then $path-length(u) = 0 $. If vertex $u$ has multiple incident edges from vertexes $v_1,v_2,\ldots ,v_m$ the the maximum 
+$path-length(u) = 1 + max (path-length(v_1)\,,path-length(v_2)\,,\ldots\,,path-length(v_m))$
+The maximum path length for a graph $G$ is thus $max ( path-length(v_i)\,, path-length(v_2)\,\ldots\,,path-length(v_n))$
+
+\subsection*{Algorithm}
+The algorithm for finding the longest path of a DAG is based on memoization. It prints the path from the last vertex to start of the path and returns the length of the longest path\\
+
+\begin{algorithm}
+\caption{LONGEST PATH}\label{Find the longest path in a DAG}
+\begin{algorithmic}[1]
+\Procedure{LONGEST-PATH}{$G = (V,E)$} \Comment{$G$ is a DAG}
+        \State \Call{TOPOLOGICAL-SORT}{$G$}
+        \State Array $M[1\ldots n]$
+        \State Initialize $M[i] = 0$ for each $i=1\,,2\,,\ldots\,,n$
+	\For{$i = 1\ldots n$}
+		\If{$n_i$ has an incoming edge}
+			\State $nopt_{max} \gets 0$
+			\ForAll{immediate predecessors $p_i$ of $n_i$}
+				\If {$M[p_i] > nopt_{max}$}
+					\State $nopt_{max} \gets M[p_i]$
+				\EndIf
+			\EndFor
+			\State $M[i] \gets nopt_{max} + 1$
+		\EndIf
+	\EndFor
+	\State $j \gets $ index of $M$ with maximum value
+	\State \Call{PRINT-PATH}{$G,M,j$}
+	\State \Return $max (M[i] )\;for\; i \;in\; 1\ldots n$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{PRINT PATH}\label{Prints the longest path in a DAG}
+\begin{algorithmic}[1]
+\Procedure{PRINT-PATH}{$G = (V,E),M,j$} \Comment{$G$ is a DAG, $M$ is the longest paths for each vertex, j is a vertex}
+	\If { $M[j] = 0$}
+		\State \Return
+	\Else
+		\State \Call{PRINT}{j}
+		\State Find vertex $i$ from where an edge is incident on $j$ such that its path length $= M[j] -1$
+		\State \Call{PRINT-PATH}{$G,M,i$}
+		\State \Return
+	\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\pagebreak
+
+\subsection*{Complexity}
+Let $n = |V|$ and $m = |E|$ for DAG $G = (V,E)$\\
+An optimal topological sort has the complexity of $O(n+m)$.\\
+The initialization of array $M$ has the complexity $O(n)$.\\
+The outer for loop will execute $O(n)$ times, yet the overall execution of the innermost loop is at most $O(m)$.\\
+Therefore, the overall complexity of the loops is at most $O(n+m)$.\\
+Therefore, the overall complexity of the algorithm is $O(n+m)$.
+
+\subsection*{Correctness}
+
+\begin{lem}
+The algorithm $LONGEST-PATH(j)$ correctly computes longest path for each vertex $j = 1,2,\ldots,n$.
+\end{lem}
+\begin{proof}
+By definition, $M(1) = 0$ as index 1 hosts the node with no incident edges.  Now, take some $j > 0$, and suppose by way of induction that $LONGEST-PATH(i)$ correctly computes $M(i)$ for all $i < j$. For the induction step, for vertex $j$, we identify a node $k$ for which there is an edge from $k$ to $j$ such that $k$ has the maximum path length among all the nodes that have a edge incident to $j$.  Based on ordering of topological sort $k < j$ and thus holds the maximum path lengths from one of the nodes without any incident edge to $k$. Thus, the path length to $j$ would be 1 more than the path length to $k$.Thus, the path length to $j$ is the longest path.  This completes the proof.
+\end{proof}
+
+
+\end{document}

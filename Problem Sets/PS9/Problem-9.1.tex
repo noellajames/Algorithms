@@ -1,0 +1,66 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+\title{Problem Set 9}
+\date{04/28/2017}
+\author{Noella James}
+\maketitle
+collaborators: none\\
+
+\section*{Problem 9-1: Vertex Cover}
+
+\subsection*{Algorithm}
+
+\begin{algorithm}
+\caption{Vertex Cover}\label{K approximation vertex cover algorithm for k hypergraph}
+\begin{algorithmic}[1]
+\Procedure{Vertex Cover}{$G = (V,E)$} 
+	\State $C \gets \{\}$
+	\State $M \gets \{\}$
+	\State $E' \gets E$
+	\While{$E' \neq \phi$}
+		\State Let $(u_1, \ldots, u_k)$  be an arbitrary edge $e$ of $E'$
+		\State $C \gets C \bigcup \{u_1, \ldots, u_k\}$ 
+		\State $M \gets M \bigcup \{e\}$
+		\State Remove from $E'$ any edge incident on any of the vertices $u_1, \ldots, u_k$
+	\EndWhile
+	\State return $C$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Complexity}
+
+The complexity of this algorithm is $O(n + m)$ where $n = |V|$ and $m = |E|$. In the worst case scenario, you iterate through all the edges and all the vertices connected to a specific edge. Thus the complexity is $O(n + m)$.
+
+\subsection*{Proof}
+
+
+\begin{lem}
+If $C*$ is the optimal cover of $G$, then the minimal approximate cover $C$ exists such that $|C| \leq k \times C*$.
+\end{lem}
+\begin{proof}
+$C*$ has an endpoint of each edge in $M$. In addition, by the constuction of M, we know that the endpoint of the edges of $M$ are precisely the set $C$. Thus, $|C*| \geq |M| \Rightarrow |C| \leq k \times |M| < k \times |C*|$.
+\end{proof}
+
+\end{document}

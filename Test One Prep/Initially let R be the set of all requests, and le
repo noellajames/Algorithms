@@ -1,0 +1,22 @@
+Initially let R be the set of all requests, and let A be empty
+While R is not yet empty
+	Choose a request i E R that has the largest start time
+	Add request i to A
+	Delete all requests from R that are not compatible with request i
+		this means that you delete all requests whose finish time is after i's start time
+EndWhile
+Return the set A as the set of accepted requests.
+
+Claim 1: For all indices r <= k, we have s(i_r) >= s(j_r)
+
+Base case: For r =1, this statement is true sicne the algorithm starts by selecting the request i_1 with the largest start time
+
+Induction Hypotheses: Now let r > 1. We will assume as our induction hypothesis that the statement is true for r-1, and we will try to prove it for r. Induction hypothesis lets us assume that s(i_(r-1)) >= s(j_(r-1)).
+
+Induction Step: We can make this argument precise as follows. We know (since O consists of compatible intervals) that s(j_(r-1)) >= f(j_r).  Combining this with the induction hypothesis s(i_(r-1)) >= s(j_(r-1)), we get s(i_(r-1)) >= f(j_r). Thus the interval j_r is in the set of R of available intervals at the time when the greedy algorithm selects i_r. The greedy algorithm selects the available intervals with the largest start time, since interval j_r is one of these available intervals, we get s(i_r) >= s(j_r). This completes the induction step.
+
+
+Claim 2: The greedy algorithm returns an optimal set A.
+
+
+We will prove this statement by contradiction. If A is not optimal, then an optimal set O must have more requests, that is, we must have m > k. Therefore, we get that the s(i_k) >= s(j_k). Since m > k, there is a request j_(k+1) in O. This request starts after request j_k ends, and hence after i_k ends. So, after deleting all requests that are not compatible with requests i_1, ..., i_k, the set of possible requests R still contains j_(k+1). But the greedy algorithm stops with request i_k, and it is only supposed to stop when R is empty-a contradiction.

@@ -1,0 +1,379 @@
+\documentclass{article}
+
+%Algorithm library
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%Math library
+\usepackage{amsmath} % for math
+\usepackage{amsthm} % for theorems and proofs
+\usepackage{amssymb}
+
+%Graph library
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usetikzlibrary{arrows.meta,chains,decorations.pathmorphing,calc}
+\usegdlibrary{trees, layered}
+
+% Definition for theorems, lemma
+\newtheorem{thm}{Theorem}[section]
+ \theoremstyle{definition}
+ \newtheorem{dfn}{Definition}[section]
+ \theoremstyle{remark}
+ \newtheorem{note}{Note}[section]
+ \theoremstyle{plain}
+ \newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+Noella James\\
+Collaborators: none\\
+
+\section{Problem 1-2: A New Order}
+
+Let $G$ be an undirected graph on $N$ vertices where each vertex has degree at most 2.\\
+
+\subsection{(a)}
+
+Suppose that we perform a BFS of $G$. Let $v_1\,, \dots \,,v_N$ be the vertices of $G$ in the order they are visited in the search. Prove or disprove: every edge in $G$ is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$ for some $i$.\\
+
+This hold true by the following proofs. We first prove that in this BFS search, every layer has at most 2 vertices. Secondly, we prove that the labeling of each edge is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$ for some $i$.
+
+\begin{lem}
+If $G$ be an undirected graph on $N$ vertices where each vertex has degree at most 2, then every layer $L_i$ in a BFS has at most 2 vertices.
+\end{lem}
+
+\begin{proof}
+
+\textbf{Proof By Induction:} On $i\;, L_i = \{$ number of vertices in layer $L_i$ at distance $i$\}\\
+
+\textbf{Base Case: $i = 0$}\\
+$i = 0.\quad L_0 = \{v_0\}\,,v_0$ only vertex in layer $L_0$. This base case holds because there is only one vertex in $L_0$\\
+
+\textbf{Base Case: $i = 1$}\\
+
+\textbf{Case $1$:} \\
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$v_0$};
+  \node (n2) at (0,0) [label=$L_1$] {$v_1$};
+  \node (n3) at (6,0) [label=$L_1$] {$v_2$};
+
+  \foreach \from/\to in {n1/n2,n1/n3}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+This case holds true because $v_0$ has a degree of 2 and layer $L_1$ has 2 vertices.\\
+
+\textbf{Case $2$:}\\
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$v_0$};
+  \node (n2) at (0,0) [label=$L_1$] {$v_1$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+This case holds true because  $v_0$ has a degree of 1 and layer $L_1$ has 1 vertices.\\
+
+\textbf{Induction Hypotheses:}\\ 
+$\forall\;i\leq k \quad L_i = \{$Has at most 2 vertices\}\\
+
+\textbf{Induction Step:}\\
+For $k+1$ we want to show $L_{k+1} = \{$ Has at most 2 vertices\}\\
+
+\textbf{Case $1$:}\\
+Layer $L_k$ has $1$ vertex and it has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_k$] {$v_m$};
+  \node (n2) at (3,0) [label=left:$L_{k+1}$] {$v_{m+1}$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+Layer $L_{k+1}$ has one vertex, and thus Case $1$ holds true.\\
+
+\textbf{Case $2$:}\\
+Layer $L_k$ has $2$ vertices and only one vertex has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) [label=left:$L_k$] {$v_m$};
+  \node (n2) at (0,0) [label=left:$L_{k+1}$] {$v_{m+1}$};
+  \node (n3) at (3,3) {$v_n$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+Layer $L_{k+1}$ has one vertex, and thus Case $2$ holds true.\\
+
+\textbf{Case $3$:}\\
+Layer $L_k$ has $2$ vertices and each vertex has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) [label=left:$L_k$] {$v_m$};
+  \node (n2) at (0,0) [label=left:$L_{k+1}$] {$v_{m+1}$};
+  \node (n3) at (3,3) {$v_n$};
+  \node (n4) at (3,0) {$v_{n+1}$};
+
+  \foreach \from/\to in {n1/n2, n3/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+Layer $L_{k+1}$ has $2$ vertices, and thus Case $3$ holds true.\\
+
+\textbf{Case $4$:}\\
+Layer $L_k$ has $2$ vertices and each vertex has $0$ children.\\
+A BFS search will never reach $L_{k+1}$ because there are no additional vertices to search.\\
+
+\end{proof}
+
+\begin{lem}
+If a BFS is performed on $G$, let $v_1\,, \dots \,,v_N$ be the vertices of $G$ in the order they are visited in the search. Every edge in $G$ is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$ for some $i$.
+\end{lem}
+
+\begin{proof}
+
+\textbf{Proof By Induction:} On $i$, every edge in $G$ is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$.
+
+\textbf{Base Case: $i = 0$}\\
+$i = 0.\quad L_0 = \{s\}\,,s$ only vertex in layer $L_0$. This base case holds because there is only one vertex in $L_0$ and thus s would be labeled as $v_0$. \\
+
+\textbf{Base Case: $i = 1$}\\
+
+\textbf{Case $1$:}\\
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$s$};
+  \node (n2) at (0,0) [label=$L_1$] {$t$};
+  \node (n3) at (6,0) [label=$L_1$] {$u$};
+
+  \foreach \from/\to in {n1/n2,n1/n3}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}
+
+This case holds true because $s$ would be labeled as $v_0$, $t$ will be labeled as $v_1$, and $u$ will be labeled as $v_2$. The edges are $(v_0, v_1)$ and $(v_0, v_2)$.  This is shown below.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$v_0$};
+  \node (n2) at (0,0) [label=$L_1$] {$v_1$};
+  \node (n3) at (6,0) [label=$L_1$] {$v_2$};
+
+  \foreach \from/\to in {n1/n2,n1/n3}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\textbf{Case $2$:} \\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$s$};
+  \node (n2) at (0,0) [label=$L_1$] {$t$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge (\to);
+ 
+\end{tikzpicture}
+
+This case holds true because $s$ would be labeled as $v_0$ and $t$ will be labeled as $v_1$. The edge is $(v_0, v_1)$. This is shown below.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) [label=left:$L_0$] {$v_0$};
+  \node (n2) at (0,0) [label=$L_1$] {$v_1$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\textbf{Induction Hypotheses:}\\ 
+$\forall\;i\leq k $ Every edge in $G$ is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$ for some $i$.\\
+
+\textbf{Induction Step:}\\
+For $k+1$ we want to show that every edge in $G$ is of the form $(v_k, v_{k+1})$ or $(v_k, v_{k+2})$\\
+
+By Lemma $1.1$, each Layer can have at most 2 vertices. Thus, we will only consider up to 2 vertices for this proof by induction.\\
+
+\textbf{Case $1$:}\\
+There is one vertex labeled as $v_k$ and it has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) {$v_k$};
+  \node (n2) at (3,0) {$t$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+The vertex $t$ would be labeled as $v_{k+1}$ since it is the next vertex to be searched. The edge is $(v_k, v_{k+1})$. Thus Case $1$ holds true.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) {$v_k$};
+  \node (n2) at (3,0) {$v_{k+1}$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\textbf{Case $2$:}\\
+At some layer, there are $2$ vertices $v_{k-1}$ and $v_k$ and only $1$ vertex has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$t$};
+  \node (n3) at (3,3) {$v_{k}$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+The vertex $t$ would be labeled as $v_{k+1}$ since it is the next vertex to be searched in BFS. The edge is $(v_{k-1}, v_{k+1})$. Thus Case $2$ holds true.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$v_{k+1}$};
+  \node (n3) at (3,3) {$v_k$};
+
+  \foreach \from/\to in {n1/n2}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+
+\textbf{Case $3$:} \\
+At some layer, there are $2$ vertices $v_{k-1}$ and $v_k$ and each vertex has $1$ child.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$s$};
+  \node (n3) at (3,3) {$v_k$};
+  \node (n4) at (3,0) {$t$};
+
+  \foreach \from/\to in {n1/n2, n3/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+The vertex $s$ would be searched before vertex $t$ because it was identified before $t$ because the parent of $s$ was identified prior to the parent of $t$.\\
+The vertices $s$ and $t$ would be labeled as $v_{k+1}$ and $v_{k+2}$ respectively since they are the next vertices to be searched in BFS. The edges are $(v_{k-1}, v_{k+1})$ and $(v_k, v_{k+2})$. Thus Case $3$ holds true.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$v_{k+1}$};
+  \node (n3) at (3,3) {$v_k$};
+  \node (n4) at (3,0) {$v_{k+2}$};
+
+  \foreach \from/\to in {n1/n2, n3/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\textbf{Case $4$:} \\
+At some layer, there are $2$ vertices $v_{k-1}$ and $v_k$ and each vertex has $1$ child, and there is an edge between the children.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$s$};
+  \node (n3) at (3,3) {$v_k$};
+  \node (n4) at (3,0) {$t$};
+
+  \foreach \from/\to in {n1/n2, n3/n4, n2/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+The vertex $s$ would be searched before vertex $t$ because it was identified before $t$ because the parent of $s$ was identified prior to the parent of $t$.\\
+The vertices $s$ and $t$ would be labeled as $v_{k+1}$ and $v_{k+2}$ respectively since they are the next vertices to be searched in BFS. The fact that there is an edge between s and t doesn't matter. The edges are $(v_{k-1}, v_{k+1})$, $(v_k, v_{k+2})$, and $(v_{k+1}, v_{k+2})$. Thus Case $4$ holds true.\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (0,3) {$v_{k-1}$};
+  \node (n2) at (0,0) {$v_{k+1}$};
+  \node (n3) at (3,3) {$v_k$};
+  \node (n4) at (3,0) {$v_{k+2}$};
+
+  \foreach \from/\to in {n1/n2, n3/n4, n2/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\textbf{Case $5$:}\\
+At some layer, there are $2$ vertices and each vertex has $0$ children.\\
+A BFS search will conclude at this layer because there are no further children to search.
+
+\end{proof}
+
+\subsection{(b)}
+
+Suppose that we perform a DFS of $G$. Let $v_1\,, \dots \,,v_N$ be the vertices of $G$ in the order they are visited in the search. Prove or disprove: every edge in $G$ is of the form $(v_i, v_{i+1})$ or $(v_i, v_{i+2})$ for some $i$.\\
+
+This claim does not prove true and I will disprove it using a proof by contradiction.\\
+
+\textbf{Proof by Contradiction:}\\
+
+\begin{proof}
+
+Based on lemma $1.1$, the only vertex that can have two children is the start node. Assume a start node with two children and that the left child has $k$ descendants, where $k > 1$. Additionally, assume that each of these $k$ descendants does not have an edge to a descendent of the right child of the start node. \\
+
+The start node will be labeled as $v_0$. The left child will be labeled as $v_1$ since it is the first child to be searched. Following the DFS, all of $v_1$'s descendants will be searched. Thus, the last descendant to be searched from the left child will be labeled as $v_k$. Thus the left subtree will be labeled $v_1 \,, \dots \,, v_k$. \\
+
+The next child to be searched will be the right child of the start node. This vertex will be labeled $v_{k+1}$. Thus, there is an edge in $G$ of the form $(v_0, v_{k+1})$ where $k > 1$. This concludes the proof by contradiction.\\
+
+\end{proof}
+
+\textbf{Example:}\\
+
+Before DFS Search:\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) {$i$};
+  \node (n2) at (0,0) {$j$};
+  \node (n3) at (6,0) {$l$};
+   \node (n4) at (-3, -3) {$m$};
+
+  \foreach \from/\to in {n1/n2,n1/n3, n2/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+After DFS Search:\\
+
+\begin{tikzpicture}
+  [scale=.8,auto=left,every node/.style={circle,fill=blue!20}]
+  \node (n1) at (3,3) {$v_0$};
+  \node (n2) at (0,0) {$v_1$};
+  \node (n3) at (6,0) {$v_3$};
+   \node (n4) at (-3, -3) {$v_2$};
+
+  \foreach \from/\to in {n1/n2,n1/n3, n2/n4}
+    \draw (\from) edge  (\to);
+ 
+\end{tikzpicture}\\
+
+\end{document}
